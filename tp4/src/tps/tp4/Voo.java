@@ -11,16 +11,14 @@ public class Voo {
     private Piloto piloto;
     private Aeroporto origem;
     private Aeroporto destino;
-    private String partida;
-    private String chegada;
-    private String data;
-    private Date hora_partida;
-    private Date hora_chegada;
-    private Date date;
+    private Date partida;
+    private Date chegada;
+    private Date data;
     private int duracao;
     private Aviao aviao;
+    private String estado;
 
-    public Voo(String codigo, Aviao aviao, Companhia companhia, Piloto piloto, Aeroporto origem, Aeroporto destino, String partida, String chegada, String data) throws ParseException{
+    public Voo(String codigo, Aviao aviao, Companhia companhia, Piloto piloto, Aeroporto origem, Aeroporto destino, Date partida, Date chegada, Date data) throws ParseException{
         this.codigo = codigo;
         this.aviao = aviao;
         this.companhia = companhia;
@@ -30,11 +28,7 @@ public class Voo {
         this.partida = partida;
         this.chegada = chegada;
         this.data = data;
-        SimpleDateFormat hora = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat dia = new SimpleDateFormat("dd-MM-yyyy");
-        date = dia.parse(data);
-        hora_partida = hora.parse(partida);
-        hora_chegada = hora.parse(chegada);
+        this.estado = "a tempo";
         this.novo_voo();
     }
 
@@ -54,6 +48,7 @@ public class Voo {
         companhia.voo_completo(this);
         origem.voo_completo(this);
         destino.voo_completo(this);
+        this.estado = "completo";
     }
 
     public void cancelado(){
@@ -62,6 +57,7 @@ public class Voo {
         companhia.voo_cancelado(this);
         origem.voo_cancelado(this);
         destino.voo_cancelado(this);
+        this.estado = "cancelado";
     }
 
     public int getDuracao(){
