@@ -1,8 +1,6 @@
 package tps.tp4;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 public class Companhia {
     
