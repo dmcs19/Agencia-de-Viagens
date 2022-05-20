@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Voos>
+    <Voo código="ABC123">
+        <Aviao>
+            <Modelo>Boeing 777</Modelo>
+            <Capacidade>550</Capacidade>
+        </Aviao>
+        <Companhia>TAP</Companhia>
+        <Piloto>
+            <Nome>Um Berto</Nome>
+            <Tempo_de_Voo>0</Tempo_de_Voo>
+        </Piloto>
+        <Origem>
+            <Aeroporto>
+                <Nome>Humberto Delgado</Nome>
+                <Abreviatura>LIS</Abreviatura>
+            <Aeroporto>
+        </Origem>
+        <Destino>
+            <Aeroporto>
+                <Nome>Aeroporto de Munique</Nome>
+                <Abreviatura>MUC</Abreviatura>
+            <Aeroporto>
+        </Destino>
+        <Hora_Partida>8:00</Hora_Partida>
+        <Hora_Chegada>16:00</Hora_Chegada>
+        <Data>13-06-2022</Data>
+    </Voo>
+    <Voo código="XYZ789">
+        <Aviao>
+            <Modelo>Airbus A330</Modelo>
+            <Capacidade>350</Capacidade>
+        </Aviao>
+        <Companhia>TAP</Companhia>
+        <Piloto>
+            <Nome>Um Berto</Nome>
+            <Tempo_de_Voo>0</Tempo_de_Voo>
+        </Piloto>
+        <Origem>
+            <Aeroporto>
+                <Nome>John F. Kennedy</Nome>
+                <Abreviatura>JFK</Abreviatura>
+            <Aeroporto>
+        </Origem>
+        <Destino>
+            <Aeroporto>
+                <Nome>Humberto Delgado</Nome>
+                <Abreviatura>LIS</Abreviatura>
+            <Aeroporto>
+        </Destino>
+        <Hora_Partida>4:00</Hora_Partida>
+        <Hora_Chegada>18:00</Hora_Chegada>
+        <Data>12-07-2022</Data>
+    </Voo>
+</Voos>
+<Contas>
+
+</Contas>
