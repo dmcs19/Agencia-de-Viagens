@@ -1,5 +1,7 @@
 package tps.tp4;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Aeroporto {
@@ -111,6 +113,58 @@ public class Aeroporto {
         }
     }
 
+    //mostra na consola a lista das partidas do aeroporto num determinado dia
+    public String getPartidasData(String date) throws ParseException{
+        ordenar_voos();
+        //tranforma a string num formato Date
+        SimpleDateFormat dia = new SimpleDateFormat("dd-MM-yyyy");
+        Date data = dia.parse(date);
+        String vooString = "";
+        boolean tem_voos = false;
+        if(voos.size() > 0){
+            vooString = "Partidas no dia " + date + ":\n";
+            //percorre todos os voos e adiciona a string aqueles que ainda nao sairam e que saem do aeroporto no qual é chamada a funçao e que tem a data pedida
+            for(int i = 0; i < voos.size(); i++){
+                if((voos.get(i).getEstado().equals("A tempo") || voos.get(i).getEstado().equals("Atrasado")) && (voos.get(i).getOrigem().equals(this)) && (data.equals(voos.get(i).getDate()))){
+                    vooString += voos.get(i).toString() + "\n";
+                    tem_voos = true;
+                }
+            }
+        }
+        //verifica se houve algum voo adicionado a string
+        if(tem_voos == true){
+            return vooString;
+        }else{
+            return "Este aeroporto não tem nenhuma partida agendada para o dia " + date;
+        }
+    }
+
+    //mostra na consola a lista das chegadas do aeroporto num determinado dia
+    public String getChegadasData(String date) throws ParseException{
+        ordenar_voos();
+        //tranforma a string num formato Date
+        SimpleDateFormat dia = new SimpleDateFormat("dd-MM-yyyy");
+        Date data = dia.parse(date);
+        String vooString = "";
+        boolean tem_voos = false;
+        if(voos.size() > 0){
+            vooString = "Chegadas no dia " + date + ":\n";
+            //percorre todos os voos e adiciona a string aqueles que ainda nao sairam e que chegam do aeroporto no qual é chamada a funçao e que tem a data pedida
+            for(int i = 0; i < voos.size(); i++){
+                if((voos.get(i).getEstado().equals("A tempo") || voos.get(i).getEstado().equals("Atrasado")) && !(voos.get(i).getOrigem().equals(this)) && (data.equals(voos.get(i).getDate()))){
+                    vooString += voos.get(i).toString() + "\n";
+                    tem_voos = true;
+                }
+            }
+        }
+        //verifica se houve algum voo adicionado a string
+        if(tem_voos == true){
+            return vooString;
+        }else{
+            return "Este aeroporto não tem nenhuma chegada agendada para o dia " + date;
+        }
+    }
+
     //ordena a lista dos proximos voos por data e caso sejam no mesmo dia ordena por hora
     private void ordenar_voos(){
         Collections.sort(voos, Comparator.comparing(Voo::getPartida));
@@ -122,8 +176,8 @@ public class Aeroporto {
         Collections.reverse(voos);
     }
 
+    //verifica se dois aeroportos sao iguais
     public boolean equals(Aeroporto aeroporto){
-        //verifica se dois aeroportos sao iguais
         if(nome.equals(aeroporto.nome)){
             return true;
         }else{
