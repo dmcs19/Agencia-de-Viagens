@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<BaseDados>
+    <Conta>
+        <Email>admin@administrador.com</Email>
+        <Password>admin123</Password>
+    </Conta>
+    <Conta>
+        <Email>um_berto@piloto.com</Email>
+        <Password>1berto</Password>
+    </Conta>
+    <Conta>
+        <Email>utilizador@gmail.com</Email>
+        <Password>utilizador123</Password>
+    </Conta>
+    <Conta>
+        <Email>dois_berto@piloto.com</Email>
+        <Password>2berto</Password>
+    </Conta>
+    <Conta>
+        <Email>tres_berto@piloto.com</Email>
+        <Password>3berto</Password>
+    </Conta>
+    <Companhia>
+        <Nome>TAP</Nome>
+    </Companhia>
+    <Companhia>
+        <Nome>Emirates</Nome>
+    </Companhia>
+    <Aviao>
+        <Modelo>Boeing 777</Modelo>
+        <Capacidade>350</Capacidade>
+    </Aviao>
+    <Piloto>
+        <Nome>Um Berto</Nome>
+        <Horas_de_voo>0</Horas_de_voo>
+    </Piloto>
+    <Piloto>
+        <Nome>Dois Berto</Nome>
+        <Horas_de_voo>0</Horas_de_voo>
+    </Piloto>
+    <Piloto>
+        <Nome>Tres Berto</Nome>
+        <Horas_de_voo>0</Horas_de_voo>
+    </Piloto>
+    <Aeroporto>
+        <Nome>Humberto Delgado</Nome>
+        <Cidade>Lisboa</Cidade>
+        <Abreviatura>LIS</Abreviatura>
+    </Aeroporto>
+    <Aeroporto>
+        <Nome>John F. Kennedy</Nome>
+        <Cidade>Nova Iorque</Cidade>
+        <Abreviatura>JFK</Abreviatura>
+    </Aeroporto>
+    <Voo>
+        <Código>ABC123</Código>
+        <Aviao_Modelo>Boeing 777</Aviao_Modelo>
+        <Companhia_Nome>TAP</Companhia_Nome>
+        <Piloto_Nome>Dois Berto</Piloto_Nome>
+        <Aeroporto_Partida_Nome>Humberto Delgado</Aeroporto_Partida_Nome>
+        <Aeroporto_Chegada_Nome>John F. Kennedy</Aeroporto_Chegada_Nome>
+        <Estado>A Tempo</Estado>
+        <Hora_Partida>8:00</Hora_Partida>
+        <Hora_Chegada>16:00</Hora_Chegada>
+        <Data>20-05-2022</Data>
+    </Voo>
+    <Voo>
+        <Código>XYZ789</Código>
+        <Aviao_Modelo>Boeing 777</Aviao_Modelo>
+        <Companhia_Nome>TAP</Companhia_Nome>
+        <Piloto_Nome>Um Berto</Piloto_Nome>
+        <Aeroporto_Partida_Nome>John F. Kennedy</Aeroporto_Partida_Nome>
+        <Aeroporto_Chegada_Nome>Humberto Delgado</Aeroporto_Chegada_Nome>
+        <Estado>A Tempo</Estado>
+        <Hora_Partida>23:00</Hora_Partida>
+        <Hora_Chegada>4:00</Hora_Chegada>
+        <Data>18-05-2022</Data>
+    </Voo>
+</BaseDados>

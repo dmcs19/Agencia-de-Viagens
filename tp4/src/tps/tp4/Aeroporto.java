@@ -3,15 +3,18 @@ package tps.tp4;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.w3c.dom.*;
 
 public class Aeroporto {
 
     private String nome;
     private String abreviatura;
+    private String cidade;
     private ArrayList<Voo> voos = new ArrayList<Voo>();
     
-    public Aeroporto(String nome, String abreviatura){
+    public Aeroporto(String nome, String cidade, String abreviatura){
         this.nome = nome;
+        this.cidade = cidade;
         this.abreviatura = abreviatura;
     }
 
@@ -178,14 +181,58 @@ public class Aeroporto {
 
     //verifica se dois aeroportos sao iguais
     public boolean equals(Aeroporto aeroporto){
-        if(nome.equals(aeroporto.nome)){
+        if(this.nome.equals(aeroporto.nome)){
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
+    //retorna a cidade do aeroporto
+    public String getCidade(){
+        return cidade;
+    }
+
+    //retorna o nome do aeroporto
+    public String getNome(){
+        return this.nome;
+    }
+
+    //retorna a abreviatura do aeroporto
+    public String getAbreviatura(){
+        return this.abreviatura;
+    }
+
+    // retorna a abreviatura do aeroporto
     public String toString(){
         return abreviatura;
+    }
+
+    //constroi um aeroporto a partir do Node dado como parametro
+    public static Aeroporto build(Node nNode){
+        Element aeroporto = (Element) nNode;
+        String nome = aeroporto.getElementsByTagName("Nome").item(0).getTextContent();
+        String cidade = aeroporto.getElementsByTagName("Cidade").item(0).getTextContent();
+        String abreviatura = aeroporto.getElementsByTagName("Abreviatura").item(0).getTextContent();
+        Aeroporto a = new Aeroporto(nome, cidade, abreviatura);
+        return a;
+    }
+
+    //cria um elemento a partir do aeroporto atual
+    public Element createElement(Document doc){
+        Element eAeroporto = doc.createElement("Aeroporto");
+
+        Element eNome = doc.createElement("Nome");
+        eNome.appendChild(doc.createTextNode(this.getNome()));
+        eAeroporto.appendChild(eNome);
+
+        Element eCidade = doc.createElement("Cidade");
+        eCidade.appendChild(doc.createTextNode(this.getCidade()));
+        eAeroporto.appendChild(eCidade);
+
+        Element eAbreviatura = doc.createElement("Abreviatura");
+        eAbreviatura.appendChild(doc.createTextNode(this.getAbreviatura()));
+        eAeroporto.appendChild(eAbreviatura);
+
+        return eAeroporto;
     }
 }

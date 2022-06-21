@@ -1,13 +1,13 @@
 package tps.tp4;
 
 import java.util.*;
+import org.w3c.dom.*;
 
 public class Companhia {
     
     private String nome;
     private ArrayList<Voo> voos = new ArrayList<Voo>();
-    private ArrayList<Aviao> avioes = new ArrayList<Aviao>();
-
+    
     public Companhia(String nome){
         this.nome = nome;
     }
@@ -15,21 +15,6 @@ public class Companhia {
     //adiciona o voo a lista de voos
     public void novo_voo(Voo voo){
         voos.add(voo);
-    }
-
-    //adiciona um aviao a companhia
-    public void adicionar_aviao(Aviao aviao){
-        avioes.add(aviao);
-    }
-
-    //remove um aviao da companhia
-    public void remover_aviao(Aviao aviao){
-        for(int i = 0; i < avioes.size(); i++){
-            if(avioes.get(i).equals(aviao)){
-                avioes.remove(i);
-                break;
-            }
-        }
     }
 
     //mostra na consola a lista dos proximos voos da companhia
@@ -113,22 +98,40 @@ public class Companhia {
         Collections.reverse(voos);
     }
 
-    //devolve os avioes que a companhia tem
-    public String getAvioes() {
-        String aviao;
-        if(avioes.size() == 0){
-            aviao = "Esta companhia não tem nenhum avião.\n";
-        }else{
-            aviao = "Avioes:\n";
-            for(int i = 0; i < avioes.size(); i++){
-                aviao += avioes.get(i).toString();
-            }
+    //retorna o nome da companhia
+    public String getNome(){
+        return this.nome;
+    }
+
+    //compara duas companhias e verifica se sao iguais
+    public boolean equals(Companhia companhia){
+        if(companhia.nome.equals(this.nome)){
+            return true;
         }
-        return aviao;
+        return false;
     }
 
     //retona o nome da companhia
     public String toString(){
         return nome;
+    }
+
+    //constroi uma nova companhia a partir do Node passado como parametro
+    public static Companhia build(Node nNode){
+        Element companhia = (Element) nNode;
+        String nome = companhia.getElementsByTagName("Nome").item(0).getTextContent();
+        Companhia c = new Companhia(nome);
+        return c;
+    }
+
+    //cria um elemento a partir da companhia atual
+    public Element createElement(Document doc){
+        Element eCompanhia = doc.createElement("Companhia");
+
+        Element eNome = doc.createElement("Nome");
+        eNome.appendChild(doc.createTextNode(this.getNome()));
+        eCompanhia.appendChild(eNome);
+
+        return eCompanhia;
     }
 }

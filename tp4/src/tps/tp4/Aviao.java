@@ -1,6 +1,7 @@
 package tps.tp4;
 
 import java.util.*;
+import org.w3c.dom.*;
 
 public class Aviao {
 
@@ -8,10 +9,9 @@ public class Aviao {
     private int capacidade;
     private ArrayList<Voo> voos = new ArrayList<Voo>();
 
-    public Aviao(String modelo, int capacidade, Companhia companhia){
+    public Aviao(String modelo, int capacidade){
         this.modelo = modelo;
         this.capacidade = capacidade;
-        companhia.adicionar_aviao(this);
     }
 
     //adiciona o voo a lista de proximos voos
@@ -77,17 +77,50 @@ public class Aviao {
         Collections.reverse(voos);
     }
 
+    //retorna o modelo do Aviao
+    public String getModelo(){
+        return this.modelo;
+    }
+
+    //retorna a capacidade do aviao
+    public int getCapacidade(){
+        return this.capacidade;
+    }
+
     //verifica se dois avioes são iguais
     public boolean equals(Aviao aviao){
-        if(this.modelo == aviao.modelo){
+        if(this.modelo.equals(aviao.modelo)){
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
     //retorna as informacoes do aviao
     public String toString(){
         return "Modelo: " + modelo + " | Capacidade: " + capacidade + "\n";
+    }
+
+    //constroi um novo aviao a partir do objeto Node passado como parametro
+    public static Aviao build(Node nNode){
+        Element aviao = (Element) nNode;
+        String modelo = aviao.getElementsByTagName("Modelo").item(0).getTextContent();
+        int capacidade = Integer.parseInt(aviao.getElementsByTagName("Capacidade").item(0).getTextContent());
+        Aviao a = new Aviao(modelo, capacidade);
+        return a;
+    }
+
+    //cria um elemento a partir do aviao atual
+    public Element createElement(Document doc){
+        Element eAviao = doc.createElement("Aviao");
+
+        Element eModelo = doc.createElement("Modelo");
+        eModelo.appendChild(doc.createTextNode(this.getModelo()));
+        eAviao.appendChild(eModelo);
+
+        Element eCapacidade = doc.createElement("Capacidade");
+        eCapacidade.appendChild(doc.createTextNode(Integer.toString(this.getCapacidade())));
+        eAviao.appendChild(eCapacidade);
+
+        return eAviao;
     }
 }

@@ -13,6 +13,15 @@ public class window{
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         frame.setContentPane(panel);
 
+        // Login panel
+        JPanel p_login = new JPanel();
+        p_login.setLayout(null);
+        frame.add(p_login);
+        // Login label
+        JLabel l_login = new JLabel("Login");
+        l_login.setBounds(375, 100, 200, 100);
+        p_login.add(l_login);
+
         JLabel label = new JLabel("Saraiva comeu a...");
         panel.add(label);
 
@@ -45,6 +54,8 @@ public class window{
         //button
         JButton button = new JButton("Perfura-me!");
         button.addActionListener(e -> {
+            frame.setContentPane(p_login);
+            frame.revalidate();
             if(checkBox.isSelected()) {
                 System.out.println("O Saraiva comeu a " + textField.getText());
             }else{
