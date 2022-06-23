@@ -1268,7 +1268,14 @@ public class Main {
                 p_admintables.add(b_remover);
                 // criar objetos button
                 if(comp == true){
-                    //TODO
+                    // nome label
+                    JLabel l_nome = new JLabel("Nome");
+                    l_nome.setBounds(420, 200, 200, 30);
+                    p_criar.add(l_nome);
+                    // nome textfield
+                    JTextField tf_nome = new JTextField();
+                    tf_nome.setBounds(400, 225, 200, 30);
+                    p_criar.add(tf_nome);
                     // companhias label
                     JLabel l1_companhias = new JLabel("Companhias");
                     l1_companhias.setBounds(420, 200, 150, 30);
@@ -1309,6 +1316,31 @@ public class Main {
                     // criar button
                     JButton b1_criar = new JButton("+   Criar");
                     b1_criar.setBounds(525, 500, 150, 75);
+                    b1_criar.addActionListener(l ->{
+                        String nome = tf_nome.getText();
+                        if(nome.length() > 0){
+                            boolean add = true;
+                            Companhia c = new Companhia(nome);
+                            for(int i = 0; i < companhias.size(); i++){
+                                if(c.equals(companhias.get(i))){
+                                    add = false;
+                                }
+                            }
+                            if(add){
+                                try {
+                                    companhias.add(c);
+                                    writeXml();
+                                    JOptionPane.showMessageDialog(null, "A companhia foi criada com sucesso!");
+                                } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                                    e1.printStackTrace();
+                                }
+                                cb_companhias.addItem(nome);
+                                p_criar.removeAll();
+                                frame.setContentPane(p_admingeneral);
+                                frame.revalidate();
+                            }
+                        }
+                    });
                     p_criar.add(b1_criar);
                     //cancelar button
                     JButton b_cancelar = new JButton("x   Cancelar");
@@ -1355,7 +1387,22 @@ public class Main {
                     });
                     p_admintables.add(b_remover_companhia);
                 }else if(avi == true){
-                    // TODO
+                    // modelo label
+                    JLabel l_modelo = new JLabel("Modelo");
+                    l_modelo.setBounds(310, 200, 200, 30);
+                    p_criar.add(l_modelo);
+                    // modelo textfield
+                    JTextField tf_modelo = new JTextField();
+                    tf_modelo.setBounds(290, 225, 200, 30);
+                    p_criar.add(tf_modelo);
+                    // capacidade label
+                    JLabel l_capacidade = new JLabel("Capacidade");
+                    l_capacidade.setBounds(530, 200, 200, 30);
+                    p_criar.add(l_capacidade);
+                    // capacidade textfield
+                    JTextField tf_capacidade = new JTextField();
+                    tf_capacidade.setBounds(510, 225, 200, 30);
+                    p_criar.add(tf_capacidade);
                     // Avioes label
                     JLabel l1_avioes = new JLabel("Aviões");
                     l1_avioes.setBounds(420, 200, 150, 30);
@@ -1396,6 +1443,32 @@ public class Main {
                     // criar button
                     JButton b1_criar = new JButton("+   Criar");
                     b1_criar.setBounds(525, 500, 150, 75);
+                    b1_criar.addActionListener(l ->{
+                        String modelo = tf_modelo.getText();
+                        int capacidade = Integer.parseInt(tf_capacidade.getText());
+                        if(modelo.length() > 0 && tf_capacidade.getText().length() > 0){
+                            boolean add = true;
+                            Aviao a = new Aviao(modelo, capacidade);
+                            for(int i = 0; i < avioes.size(); i++){
+                                if(a.equals(avioes.get(i))){
+                                    add = false;
+                                }
+                            }
+                            if(add){
+                                try {
+                                    avioes.add(a);
+                                    writeXml();
+                                    JOptionPane.showMessageDialog(null, "O Avião foi criado com sucesso!");
+                                } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                                    e1.printStackTrace();
+                                }
+                                cb_avioes.addItem(modelo);
+                                p_criar.removeAll();
+                                frame.setContentPane(p_admingeneral);
+                                frame.revalidate();
+                            }
+                        }
+                    });
                     p_criar.add(b1_criar);
                     //cancelar button
                     JButton b_cancelar = new JButton("x   Cancelar");
@@ -1442,7 +1515,22 @@ public class Main {
                     });
                     p_admintables.add(b_remover_aviao);
                 }else if(pil == true){
-                    // TODO
+                    // nome label
+                    JLabel l_nome = new JLabel("Nome");
+                    l_nome.setBounds(310, 200, 200, 30);
+                    p_criar.add(l_nome);
+                    // nome textfield
+                    JTextField tf_nome = new JTextField();
+                    tf_nome.setBounds(290, 225, 200, 30);
+                    p_criar.add(tf_nome);
+                    // horas de voo label
+                    JLabel l_horas = new JLabel("Horas de Voo");
+                    l_horas.setBounds(530, 200, 200, 30);
+                    p_criar.add(l_horas);
+                    // horas de voo textfield
+                    JTextField tf_horas = new JTextField();
+                    tf_horas.setBounds(510, 225, 200, 30);
+                    p_criar.add(tf_horas);
                     // pilotos label
                     JLabel l1_pilotos = new JLabel("Pilotos");
                     l1_pilotos.setBounds(420, 200, 150, 30);
@@ -1493,6 +1581,32 @@ public class Main {
                     // criar button
                     JButton b1_criar = new JButton("+   Criar");
                     b1_criar.setBounds(525, 500, 150, 75);
+                    b1_criar.addActionListener(l ->{
+                        if(tf_nome.getText().length() > 0 && tf_horas.getText().length() > 0){
+                            int horas = Integer.parseInt(tf_horas.getText());
+                            String nome = tf_nome.getText();
+                            boolean add = true;
+                            Piloto p = new Piloto(nome, horas);
+                            for(int i = 0; i < pilotos.size(); i++){
+                                if(p.equals(pilotos.get(i))){
+                                    add = false;
+                                }
+                            }
+                            if(add){                                
+                                try {
+                                    pilotos.add(p);
+                                    writeXml();
+                                    JOptionPane.showMessageDialog(null, "O Piloto foi criado com sucesso!");
+                                } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                                    e1.printStackTrace();
+                                }
+                                cb_pilotos.addItem(nome);
+                                p_criar.removeAll();
+                                frame.setContentPane(p_admingeneral);
+                                frame.revalidate();
+                            }
+                        }
+                    });
                     p_criar.add(b1_criar);
                     //cancelar button
                     JButton b_cancelar = new JButton("x   Cancelar");
@@ -1539,7 +1653,30 @@ public class Main {
                     });
                     p_admintables.add(b_remover_piloto);
                 }else{
-                    // TODO
+                    //  nome label
+                    JLabel l_nome = new JLabel("Nome");
+                    l_nome.setBounds(200, 200, 200, 30);
+                    p_criar.add(l_nome);
+                    // nome textfield
+                    JTextField tf_nome = new JTextField();
+                    tf_nome.setBounds(180, 225, 200, 30);
+                    p_criar.add(tf_nome);
+                    // cidade label
+                    JLabel l_cidade = new JLabel("Cidade");
+                    l_cidade.setBounds(420, 200, 200, 30);
+                    p_criar.add(l_cidade);
+                    // cidade textfield
+                    JTextField tf_cidade = new JTextField();
+                    tf_cidade.setBounds(400, 225, 200, 30);
+                    p_criar.add(tf_cidade);
+                    // abreviatura label
+                    JLabel l_abreviatura = new JLabel("Abreviatura");
+                    l_abreviatura.setBounds(640, 200, 200, 30);
+                    p_criar.add(l_abreviatura);
+                    // abreviatura textfield
+                    JTextField tf_abreviatura = new JTextField();
+                    tf_abreviatura.setBounds(620, 225, 200, 30);
+                    p_criar.add(tf_abreviatura);
                     // aeroportos label
                     JLabel l1_aeroportos = new JLabel("Aeroportos");
                     l1_aeroportos.setBounds(420, 200, 150, 30);
@@ -1580,6 +1717,32 @@ public class Main {
                     // criar button
                     JButton b1_criar = new JButton("+   Criar");
                     b1_criar.setBounds(525, 500, 150, 75);
+                    b1_criar.addActionListener(l ->{
+                        String nome = tf_nome.getText();
+                        String cidade = tf_cidade.getText();
+                        String abreviatura = tf_abreviatura.getText();
+                        if(nome.length() > 0 && cidade.length() > 0 && abreviatura.length() > 0){
+                            boolean add = true;
+                            Aeroporto a = new Aeroporto(nome, cidade, abreviatura);
+                            for(int i = 0; i < aeroportos.size(); i++){
+                                if(a.equals(aeroportos.get(i))){
+                                    add = false;
+                                }
+                            }
+                            if(add){
+                                try {
+                                    aeroportos.add(a);
+                                    writeXml();
+                                    JOptionPane.showMessageDialog(null, "O Aeroporto foi criado com sucesso!");
+                                } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                                    e1.printStackTrace();
+                                }
+                                p_criar.removeAll();
+                                frame.setContentPane(p_admingeneral);
+                                frame.revalidate();
+                            }
+                        }
+                    });
                     p_criar.add(b1_criar);
                     //cancelar button
                     JButton b_cancelar = new JButton("x   Cancelar");
