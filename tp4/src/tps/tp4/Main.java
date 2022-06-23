@@ -167,7 +167,7 @@ public class Main {
         // Menu panel
         JPanel p_menu = new JPanel();
         p_menu.setLayout(null);
-        //frame.setContentPane(p_menu);
+        frame.setContentPane(p_menu);
         // Login panel
         JPanel p_login = new JPanel();
         p_login.setLayout(null);
@@ -198,8 +198,6 @@ public class Main {
         // Admin criar objeto panel
         JPanel p_criar = new JPanel();
         p_criar.setLayout(null);
-
-        frame.setContentPane(p_admingeneral);
 
 
 
@@ -333,10 +331,8 @@ public class Main {
                 data_historico[0][5] = "Chegada";
                 data_historico[0][6] = "Data";
                 data_historico[0][7] = "Estado";
-                ordenar_voos();
                 ArrayList<Voo> voos_piloto = pilotos.get(index).getVoos();
                 ArrayList<Voo> proximos_voos_piloto = pilotos.get(index).getProximosVoos();
-                reverse_voos();
                 ArrayList<Voo> historico_voos_piloto = pilotos.get(index).getHistoricoVoos();
                 if(voos_total > 0){
                     for(int i = 1; i < voos_total + 1; i++){
@@ -346,9 +342,9 @@ public class Main {
                             }else if(j == 1){
                                 data_total[i][j] = voos_piloto.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_total[i][j] = "(" + voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_piloto.get(i - 1).getOrigem().getNome();
+                                data_total[i][j] = "(" + voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_piloto.get(i - 1).getOrigem().getCidade();
                             }else if(j == 3){
-                                data_total[i][j] = "(" + voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + voos_piloto.get(i - 1).getDestino().getNome();
+                                data_total[i][j] = "(" + voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + voos_piloto.get(i - 1).getDestino().getCidade();
                             }else if(j == 4){
                                 data_total[i][j] = voos_piloto.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -369,9 +365,9 @@ public class Main {
                             }else if(j == 1){
                                 data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_proximos[i][j] = "(" + proximos_voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + proximos_voos_piloto.get(i - 1).getOrigem().getNome();
+                                data_proximos[i][j] = "(" + proximos_voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + proximos_voos_piloto.get(i - 1).getOrigem().getCidade();
                             }else if(j == 3){
-                                data_proximos[i][j] = "(" + proximos_voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + proximos_voos_piloto.get(i - 1).getDestino().getNome();
+                                data_proximos[i][j] = "(" + proximos_voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + proximos_voos_piloto.get(i - 1).getDestino().getCidade();
                             }else if(j == 4){
                                 data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -392,9 +388,9 @@ public class Main {
                             }else if(j == 1){
                                 data_historico[i][j] = historico_voos_piloto.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_historico[i][j] = "(" + historico_voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + historico_voos_piloto.get(i - 1).getOrigem().getNome();
+                                data_historico[i][j] = "(" + historico_voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + historico_voos_piloto.get(i - 1).getOrigem().getCidade();
                             }else if(j == 3){
-                                data_historico[i][j] = "(" + historico_voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + historico_voos_piloto.get(i - 1).getDestino().getNome();
+                                data_historico[i][j] = "(" + historico_voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + historico_voos_piloto.get(i - 1).getDestino().getCidade();
                             }else if(j == 4){
                                 data_historico[i][j] = historico_voos_piloto.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -842,9 +838,9 @@ public class Main {
                                 }else if(j == 1){
                                     data_voos[i][j] = voos_pedidos.get(i - 1).getCompanhia().getNome();
                                 }else if(j == 2){
-                                    data_voos[i][j] = voos_pedidos.get(i - 1).getOrigem().getNome();
+                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getOrigem().getCidade();
                                 }else if(j == 3){
-                                    data_voos[i][j] = voos_pedidos.get(i - 1).getDestino().getNome();
+                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getDestino().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getDestino().getCidade();
                                 }else if(j == 4){
                                     data_voos[i][j] = voos_pedidos.get(i - 1).getPartida();
                                 }else if(j == 5){
@@ -930,9 +926,9 @@ public class Main {
                                 }else if(j == 1){
                                     data_voos[i][j] = voos_pedidos.get(i - 1).getCompanhia().getNome();
                                 }else if(j == 2){
-                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getOrigem().getNome();
+                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getOrigem().getCidade();
                                 }else if(j == 3){
-                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getDestino().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getDestino().getNome();
+                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getDestino().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getDestino().getCidade();
                                 }else if(j == 4){
                                     data_voos[i][j] = voos_pedidos.get(i - 1).getPartida();
                                 }else if(j == 5){
@@ -1211,9 +1207,9 @@ public class Main {
                             }else if(j == 1){
                                 data_voos[i][j] = voos_a_adicionar.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_voos[i][j] = "(" + voos_a_adicionar.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_a_adicionar.get(i - 1).getOrigem().getNome();
+                                data_voos[i][j] = "(" + voos_a_adicionar.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_a_adicionar.get(i - 1).getOrigem().getCidade();
                             }else if(j == 3){
-                                data_voos[i][j] = "(" + voos_a_adicionar.get(i - 1).getDestino().getAbreviatura() + ")" + voos_a_adicionar.get(i - 1).getDestino().getNome();
+                                data_voos[i][j] = "(" + voos_a_adicionar.get(i - 1).getDestino().getAbreviatura() + ")" + voos_a_adicionar.get(i - 1).getDestino().getCidade();
                             }else if(j == 4){
                                 data_voos[i][j] = voos_a_adicionar.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -1271,11 +1267,9 @@ public class Main {
                     // nome label
                     JLabel l_nome = new JLabel("Nome");
                     l_nome.setBounds(420, 200, 200, 30);
-                    p_criar.add(l_nome);
                     // nome textfield
                     JTextField tf_nome = new JTextField();
                     tf_nome.setBounds(400, 225, 200, 30);
-                    p_criar.add(tf_nome);
                     // companhias label
                     JLabel l1_companhias = new JLabel("Companhias");
                     l1_companhias.setBounds(420, 200, 150, 30);
@@ -1368,6 +1362,8 @@ public class Main {
                         avi = false;
                         pil = false;
                         aero = false;
+                        p_criar.add(l_nome);
+                        p_criar.add(tf_nome);
                         p_admintables.removeAll();
                         frame.setContentPane(p_criar);
                         frame.revalidate();
@@ -1390,19 +1386,15 @@ public class Main {
                     // modelo label
                     JLabel l_modelo = new JLabel("Modelo");
                     l_modelo.setBounds(310, 200, 200, 30);
-                    p_criar.add(l_modelo);
                     // modelo textfield
                     JTextField tf_modelo = new JTextField();
                     tf_modelo.setBounds(290, 225, 200, 30);
-                    p_criar.add(tf_modelo);
                     // capacidade label
                     JLabel l_capacidade = new JLabel("Capacidade");
                     l_capacidade.setBounds(530, 200, 200, 30);
-                    p_criar.add(l_capacidade);
                     // capacidade textfield
                     JTextField tf_capacidade = new JTextField();
                     tf_capacidade.setBounds(510, 225, 200, 30);
-                    p_criar.add(tf_capacidade);
                     // Avioes label
                     JLabel l1_avioes = new JLabel("Aviões");
                     l1_avioes.setBounds(420, 200, 150, 30);
@@ -1496,6 +1488,10 @@ public class Main {
                         avi = false;
                         pil = false;
                         aero = false;
+                        p_criar.add(l_modelo);
+                        p_criar.add(tf_modelo);
+                        p_criar.add(l_capacidade);
+                        p_criar.add(tf_capacidade);
                         p_admintables.removeAll();
                         frame.setContentPane(p_criar);
                         frame.revalidate();
@@ -1518,19 +1514,15 @@ public class Main {
                     // nome label
                     JLabel l_nome = new JLabel("Nome");
                     l_nome.setBounds(310, 200, 200, 30);
-                    p_criar.add(l_nome);
                     // nome textfield
                     JTextField tf_nome = new JTextField();
                     tf_nome.setBounds(290, 225, 200, 30);
-                    p_criar.add(tf_nome);
                     // horas de voo label
                     JLabel l_horas = new JLabel("Horas de Voo");
                     l_horas.setBounds(530, 200, 200, 30);
-                    p_criar.add(l_horas);
                     // horas de voo textfield
                     JTextField tf_horas = new JTextField();
                     tf_horas.setBounds(510, 225, 200, 30);
-                    p_criar.add(tf_horas);
                     // pilotos label
                     JLabel l1_pilotos = new JLabel("Pilotos");
                     l1_pilotos.setBounds(420, 200, 150, 30);
@@ -1634,6 +1626,10 @@ public class Main {
                         avi = false;
                         pil = false;
                         aero = false;
+                        p_criar.add(l_nome);
+                        p_criar.add(tf_nome);
+                        p_criar.add(l_horas);
+                        p_criar.add(tf_horas);
                         p_admintables.removeAll();
                         frame.setContentPane(p_criar);
                         frame.revalidate();
@@ -1656,27 +1652,21 @@ public class Main {
                     //  nome label
                     JLabel l_nome = new JLabel("Nome");
                     l_nome.setBounds(200, 200, 200, 30);
-                    p_criar.add(l_nome);
                     // nome textfield
                     JTextField tf_nome = new JTextField();
                     tf_nome.setBounds(180, 225, 200, 30);
-                    p_criar.add(tf_nome);
                     // cidade label
                     JLabel l_cidade = new JLabel("Cidade");
                     l_cidade.setBounds(420, 200, 200, 30);
-                    p_criar.add(l_cidade);
                     // cidade textfield
                     JTextField tf_cidade = new JTextField();
                     tf_cidade.setBounds(400, 225, 200, 30);
-                    p_criar.add(tf_cidade);
                     // abreviatura label
                     JLabel l_abreviatura = new JLabel("Abreviatura");
                     l_abreviatura.setBounds(640, 200, 200, 30);
-                    p_criar.add(l_abreviatura);
                     // abreviatura textfield
                     JTextField tf_abreviatura = new JTextField();
                     tf_abreviatura.setBounds(620, 225, 200, 30);
-                    p_criar.add(tf_abreviatura);
                     // aeroportos label
                     JLabel l1_aeroportos = new JLabel("Aeroportos");
                     l1_aeroportos.setBounds(420, 200, 150, 30);
@@ -1766,6 +1756,12 @@ public class Main {
                     JButton b_criar_aeroporto = new JButton("+   Criar Aeroporto");
                     b_criar_aeroporto.setBounds(775, 150, 150, 75);
                     b_criar_aeroporto.addActionListener(l ->{
+                        p_criar.add(l_nome);
+                        p_criar.add(tf_nome);
+                        p_criar.add(l_cidade);
+                        p_criar.add(tf_cidade);
+                        p_criar.add(l_abreviatura);
+                        p_criar.add(tf_abreviatura);
                         comp = true;
                         avi = false;
                         pil = false;
@@ -1871,9 +1867,9 @@ public class Main {
                         }else if(j == 1){
                             data_voos[i][j] = voos.get(i - 1).getCompanhia().getNome();
                         }else if(j == 2){
-                            data_voos[i][j] = "(" + voos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos.get(i - 1).getOrigem().getNome();
+                            data_voos[i][j] = "(" + voos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos.get(i - 1).getOrigem().getCidade();
                         }else if(j == 3){
-                            data_voos[i][j] = "(" + voos.get(i - 1).getDestino().getAbreviatura() + ")" + voos.get(i - 1).getDestino().getNome();
+                            data_voos[i][j] = "(" + voos.get(i - 1).getDestino().getAbreviatura() + ")" + voos.get(i - 1).getDestino().getCidade();
                         }else if(j == 4){
                             data_voos[i][j] = voos.get(i - 1).getPartida();
                         }else if(j == 5){
