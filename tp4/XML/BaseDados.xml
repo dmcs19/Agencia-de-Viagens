@@ -26,13 +26,30 @@
     <Companhia>
         <Nome>Emirates</Nome>
     </Companhia>
+    <Companhia>
+        <Nome>Ryanair</Nome>
+    </Companhia>
+    <Companhia>
+        <Nome>Lufthansa</Nome>
+    </Companhia>
+    <Companhia>
+        <Nome>EasyJet</Nome>
+    </Companhia>
     <Aviao>
         <Modelo>Boeing 777</Modelo>
         <Capacidade>350</Capacidade>
     </Aviao>
+    <Aviao>
+        <Modelo>Airbus A300</Modelo>
+        <Capacidade>270</Capacidade>
+    </Aviao>
+    <Aviao>
+        <Modelo>Cessna 208</Modelo>
+        <Capacidade>14</Capacidade>
+    </Aviao>
     <Piloto>
         <Nome>Um Berto</Nome>
-        <Horas_de_voo>0</Horas_de_voo>
+        <Horas_de_voo>5</Horas_de_voo>
     </Piloto>
     <Piloto>
         <Nome>Dois Berto</Nome>
@@ -52,17 +69,80 @@
         <Cidade>Nova Iorque</Cidade>
         <Abreviatura>JFK</Abreviatura>
     </Aeroporto>
+    <Aeroporto>
+        <Nome>Franz Josef Strauss</Nome>
+        <Cidade>Munique</Cidade>
+        <Abreviatura>MUC</Abreviatura>
+    </Aeroporto>
+    <Aeroporto>
+        <Nome>Francisco Sá Carneiro</Nome>
+        <Cidade>Porto</Cidade>
+        <Abreviatura>OPO</Abreviatura>
+    </Aeroporto>
+    <Aeroporto>
+        <Nome>Josep Tarradellas Barcelona-El Prat</Nome>
+        <Cidade>Barcelona</Cidade>
+        <Abreviatura>BCN</Abreviatura>
+    </Aeroporto>
+    <Voo>
+        <Código>FJE748</Código>
+        <Aviao_Modelo>Airbus A300</Aviao_Modelo>
+        <Companhia_Nome>Emirates</Companhia_Nome>
+        <Piloto_Nome>Dois Berto</Piloto_Nome>
+        <Aeroporto_Partida_Nome>Josep Tarradellas Barcelona-El Prat</Aeroporto_Partida_Nome>
+        <Aeroporto_Chegada_Nome>Humberto Delgado</Aeroporto_Chegada_Nome>
+        <Estado>A Tempo</Estado>
+        <Hora_Partida>8:00</Hora_Partida>
+        <Hora_Chegada>12:00</Hora_Chegada>
+        <Data>20-06-2022</Data>
+    </Voo>
+    <Voo>
+        <Código>UBE842</Código>
+        <Aviao_Modelo>Cessna 208</Aviao_Modelo>
+        <Companhia_Nome>Ryanair</Companhia_Nome>
+        <Piloto_Nome>Um Berto</Piloto_Nome>
+        <Aeroporto_Partida_Nome>Franz Josef Strauss</Aeroporto_Partida_Nome>
+        <Aeroporto_Chegada_Nome>Francisco Sá Carneiro</Aeroporto_Chegada_Nome>
+        <Estado>A Tempo</Estado>
+        <Hora_Partida>17:00</Hora_Partida>
+        <Hora_Chegada>22:00</Hora_Chegada>
+        <Data>20-06-2022</Data>
+    </Voo>
+    <Voo>
+        <Código>DEF456</Código>
+        <Aviao_Modelo>Airbus A300</Aviao_Modelo>
+        <Companhia_Nome>Emirates</Companhia_Nome>
+        <Piloto_Nome>Dois Berto</Piloto_Nome>
+        <Aeroporto_Partida_Nome>Humberto Delgado</Aeroporto_Partida_Nome>
+        <Aeroporto_Chegada_Nome>Josep Tarradellas Barcelona-El Prat</Aeroporto_Chegada_Nome>
+        <Estado>Atrasado</Estado>
+        <Hora_Partida>20:00</Hora_Partida>
+        <Hora_Chegada>23:00</Hora_Chegada>
+        <Data>14-06-2022</Data>
+    </Voo>
     <Voo>
         <Código>ABC123</Código>
         <Aviao_Modelo>Boeing 777</Aviao_Modelo>
         <Companhia_Nome>TAP</Companhia_Nome>
-        <Piloto_Nome>Dois Berto</Piloto_Nome>
+        <Piloto_Nome>Um Berto</Piloto_Nome>
         <Aeroporto_Partida_Nome>Humberto Delgado</Aeroporto_Partida_Nome>
         <Aeroporto_Chegada_Nome>John F. Kennedy</Aeroporto_Chegada_Nome>
         <Estado>A Tempo</Estado>
         <Hora_Partida>8:00</Hora_Partida>
         <Hora_Chegada>16:00</Hora_Chegada>
         <Data>20-05-2022</Data>
+    </Voo>
+    <Voo>
+        <Código>FUE283</Código>
+        <Aviao_Modelo>Cessna 208</Aviao_Modelo>
+        <Companhia_Nome>Ryanair</Companhia_Nome>
+        <Piloto_Nome>Três Berto</Piloto_Nome>
+        <Aeroporto_Partida_Nome>Francisco Sá Carneiro</Aeroporto_Partida_Nome>
+        <Aeroporto_Chegada_Nome>Franz Josef Strauss</Aeroporto_Chegada_Nome>
+        <Estado>Completo</Estado>
+        <Hora_Partida>10:00</Hora_Partida>
+        <Hora_Chegada>15:00</Hora_Chegada>
+        <Data>28-02-2021</Data>
     </Voo>
     <Voo>
         <Código>XYZ789</Código>

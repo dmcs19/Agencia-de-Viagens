@@ -17,6 +17,7 @@ public class Voo {
     String date;
     private Date partida;
     private Date chegada;
+    private Date data;
     private int duracao;
     private Aviao aviao;
     private String estado;
@@ -29,9 +30,11 @@ public class Voo {
         this.origem = origem;
         this.destino = destino;
         SimpleDateFormat hora = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dia = new SimpleDateFormat("dd-MM-yyyy");
         this.hora_partida = hora_partida;
         this.hora_chegada = hora_chegada;
         this.date = date;
+        this.data = dia.parse(date);
         this.partida = hora.parse(hora_partida);
         this.chegada = hora.parse(hora_chegada);
         this.novo_voo();
@@ -98,6 +101,11 @@ public class Voo {
         return date;
     }
 
+    //retorna a data do voo em formato Date
+    public Date getData(){
+        return data;
+    }
+
     //retorna o estado do voo
     public String getEstado(){
         return estado;
@@ -111,6 +119,16 @@ public class Voo {
     //retorna o aviao do voo
     public Aviao getAviao(){
         return aviao;
+    }
+
+    // retorna a companhia que vai realizar o voo
+    public Companhia getCompanhia(){
+        return companhia;
+    }
+
+    // retorna o piloto do voo
+    public Piloto getPiloto(){
+        return piloto;
     }
 
     //verifica se dois voos sao iguais

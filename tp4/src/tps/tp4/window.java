@@ -54,8 +54,6 @@ public class window{
         //button
         JButton button = new JButton("Perfura-me!");
         button.addActionListener(e -> {
-            frame.setContentPane(p_login);
-            frame.revalidate();
             if(checkBox.isSelected()) {
                 System.out.println("O Saraiva comeu a " + textField.getText());
             }else{
@@ -65,5 +63,6 @@ public class window{
         panel.add(button);
 
         frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

@@ -4,12 +4,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
@@ -32,6 +32,10 @@ public class Main {
     private static String email_piloto = "";
     private static int index;
     private static int index_account;
+    private static boolean comp;
+    private static boolean avi;
+    private static boolean pil;
+    private static boolean aero;
 
     public static void main(String[] args) throws ParseException, TransformerException, ParserConfigurationException, IOException {
         
@@ -88,7 +92,7 @@ public class Main {
                     Aviao a = Aviao.build(nNode);
                     boolean add = true;
                     if(avioes.size() > 0){
-                        for(int j = 0; j < companhias.size(); j++){
+                        for(int j = 0; j < avioes.size(); j++){
                             if(a.equals(avioes.get(j))){ 
                                 add = false;
                             }
@@ -159,12 +163,11 @@ public class Main {
         frame.setSize(1000, 800);
         frame.setResizable(false);
 
-
         //Panels
         // Menu panel
         JPanel p_menu = new JPanel();
         p_menu.setLayout(null);
-        frame.setContentPane(p_menu);
+        //frame.setContentPane(p_menu);
         // Login panel
         JPanel p_login = new JPanel();
         p_login.setLayout(null);
@@ -174,12 +177,29 @@ public class Main {
         // BuyFligths panel
         JPanel p_buyFligths = new JPanel();
         p_buyFligths.setLayout(null);
+        // ShowFligths panel
+        JPanel p_showFligths = new JPanel();
+        p_showFligths.setLayout(null);
         // Piloto panel
         JPanel p_piloto = new JPanel();
         p_piloto.setLayout(null);
         // Admin panel
-        JPanel p_admin = new JPanel();
-        p_admin.setLayout(null);
+        JPanel p_admingeneral = new JPanel();
+        p_admingeneral.setLayout(null);
+        // Admin panel with tables
+        JPanel p_admintables = new JPanel();
+        p_admintables.setLayout(null);
+        // Admin criar voo panel
+        JPanel p_criar_voo = new JPanel();
+        p_criar_voo.setLayout(null);
+        // Admin remover objeto panel
+        JPanel p_remover = new JPanel();
+        p_remover.setLayout(null);
+        // Admin criar objeto panel
+        JPanel p_criar = new JPanel();
+        p_criar.setLayout(null);
+
+        frame.setContentPane(p_admingeneral);
 
 
 
@@ -256,6 +276,7 @@ public class Main {
                 //passar para o painel de administrador
                 l_credentials.setVisible(false);
                 tf_usernameField.setText("");
+                frame.setContentPane(p_admingeneral);frame.revalidate();
             }else if(exists && contas.get(index_account).getEstatuto().equals("Piloto")){
                 //passar para o painel do piloto
                 l_credentials.setVisible(false);
@@ -283,13 +304,13 @@ public class Main {
                 int voos_total = pilotos.get(index).getNumVoos();
                 int num_proximos_voos = pilotos.get(index).getNumProximosVoos();
                 int num_historico_voos = pilotos.get(index).getNumHistoricoVoos();
-                String[] columnsName = {"Código", "Avião", "Origem", "Destino", "Partida", "Chegada", "Data", "Estado"};
+                String[] columnsName = {"Código", "Companhia", "Origem", "Destino", "Partida", "Chegada", "Data", "Estado"};
                 Object[][] data_total = new Object[voos_total + 1][8];
                 Object[][] data_proximos = new Object[num_proximos_voos + 1][8];
                 Object[][] data_historico = new Object[num_historico_voos + 1][8];
                 //adicionar os detalhes dos voos a tabela
                 data_total[0][0] = "Código";
-                data_total[0][1] = "Avião";
+                data_total[0][1] = "Companhia";
                 data_total[0][2] = "Origem";
                 data_total[0][3] = "Destino";
                 data_total[0][4] = "Partida";
@@ -297,7 +318,7 @@ public class Main {
                 data_total[0][6] = "Data";
                 data_total[0][7] = "Estado";
                 data_proximos[0][0] = "Código";
-                data_proximos[0][1] = "Avião";
+                data_proximos[0][1] = "Companhia";
                 data_proximos[0][2] = "Origem";
                 data_proximos[0][3] = "Destino";
                 data_proximos[0][4] = "Partida";
@@ -305,15 +326,17 @@ public class Main {
                 data_proximos[0][6] = "Data";
                 data_proximos[0][7] = "Estado";
                 data_historico[0][0] = "Código";
-                data_historico[0][1] = "Avião";
+                data_historico[0][1] = "Companhia";
                 data_historico[0][2] = "Origem";
                 data_historico[0][3] = "Destino";
                 data_historico[0][4] = "Partida";
                 data_historico[0][5] = "Chegada";
                 data_historico[0][6] = "Data";
                 data_historico[0][7] = "Estado";
+                ordenar_voos();
                 ArrayList<Voo> voos_piloto = pilotos.get(index).getVoos();
                 ArrayList<Voo> proximos_voos_piloto = pilotos.get(index).getProximosVoos();
+                reverse_voos();
                 ArrayList<Voo> historico_voos_piloto = pilotos.get(index).getHistoricoVoos();
                 if(voos_total > 0){
                     for(int i = 1; i < voos_total + 1; i++){
@@ -321,11 +344,11 @@ public class Main {
                             if(j == 0){
                                 data_total[i][j] = voos_piloto.get(i - 1).getCodigo();
                             }else if(j == 1){
-                                data_total[i][j] = voos_piloto.get(i - 1).getAviao().getModelo();
+                                data_total[i][j] = voos_piloto.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_total[i][j] = voos_piloto.get(i - 1).getOrigem().getNome();
+                                data_total[i][j] = "(" + voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_piloto.get(i - 1).getOrigem().getNome();
                             }else if(j == 3){
-                                data_total[i][j] = voos_piloto.get(i - 1).getDestino().getNome();
+                                data_total[i][j] = "(" + voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + voos_piloto.get(i - 1).getDestino().getNome();
                             }else if(j == 4){
                                 data_total[i][j] = voos_piloto.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -344,11 +367,11 @@ public class Main {
                             if(j == 0){
                                 data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getCodigo();
                             }else if(j == 1){
-                                data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getAviao().getModelo();
+                                data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getOrigem().getNome();
+                                data_proximos[i][j] = "(" + proximos_voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + proximos_voos_piloto.get(i - 1).getOrigem().getNome();
                             }else if(j == 3){
-                                data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getDestino().getNome();
+                                data_proximos[i][j] = "(" + proximos_voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + proximos_voos_piloto.get(i - 1).getDestino().getNome();
                             }else if(j == 4){
                                 data_proximos[i][j] = proximos_voos_piloto.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -367,11 +390,11 @@ public class Main {
                             if(j == 0){
                                 data_historico[i][j] = historico_voos_piloto.get(i - 1).getCodigo();
                             }else if(j == 1){
-                                data_historico[i][j] = historico_voos_piloto.get(i - 1).getAviao().getModelo();
+                                data_historico[i][j] = historico_voos_piloto.get(i - 1).getCompanhia().getNome();
                             }else if(j == 2){
-                                data_historico[i][j] = historico_voos_piloto.get(i - 1).getOrigem().getNome();
+                                data_historico[i][j] = "(" + historico_voos_piloto.get(i - 1).getOrigem().getAbreviatura() + ")" + historico_voos_piloto.get(i - 1).getOrigem().getNome();
                             }else if(j == 3){
-                                data_historico[i][j] = historico_voos_piloto.get(i - 1).getDestino().getNome();
+                                data_historico[i][j] = "(" + historico_voos_piloto.get(i - 1).getDestino().getAbreviatura() + ")" + historico_voos_piloto.get(i - 1).getDestino().getNome();
                             }else if(j == 4){
                                 data_historico[i][j] = historico_voos_piloto.get(i - 1).getPartida();
                             }else if(j == 5){
@@ -707,6 +730,10 @@ public class Main {
         b_troca.setBounds(285, 275, 40, 40);
         b_troca.addActionListener(e ->{
             //trocar a partida com o destino
+            int origem = aeroportos_partida.getSelectedIndex();
+            int destino = aeroportos_chegada.getSelectedIndex();
+            aeroportos_partida.setSelectedIndex(destino);
+            aeroportos_chegada.setSelectedIndex(origem);
         });
         p_buyFligths.add(b_troca);
         // partida textfield
@@ -756,15 +783,198 @@ public class Main {
         });
         p_buyFligths.add(cb_ida);
         p_buyFligths.add(cb_ida_volta);
+        // label falta aeroporto
+        JLabel l_falta_aeroporto = new JLabel("Selecione um aeroporto de origem e um de destino");
+        l_falta_aeroporto.setBounds(100, 285, 500, 100);
+        l_falta_aeroporto.setForeground(Color.RED);
+        l_falta_aeroporto.setVisible(false);
+        p_buyFligths.add(l_falta_aeroporto);
+        // label aeroportos diferentes
+        JLabel l_aeroportos_diferentes = new JLabel("Selecione dois aeroportos diferentes");
+        l_aeroportos_diferentes.setBounds(100, 285, 500, 100);
+        l_aeroportos_diferentes.setForeground(Color.RED);
+        l_aeroportos_diferentes.setVisible(false);
+        p_buyFligths.add(l_aeroportos_diferentes);
         //procurar voo button
         JButton b_procurar = new JButton("Procurar Voos ->");
         b_procurar.setBounds(600, 375, 200, 50);
         b_procurar.addActionListener(e ->{
             //procurar os voos pedidos
             if(cb_ida.isSelected()){
-                //voos so de ida
+                // cria uma tabela com os voos so de ida
+                if(aeroportos_partida.getSelectedItem().equals("") || aeroportos_chegada.getSelectedItem().equals("")){
+                    l_falta_aeroporto.setVisible(true);
+                    l_aeroportos_diferentes.setVisible(false);
+                }else if(aeroportos_partida.getSelectedIndex() == aeroportos_chegada.getSelectedIndex()){
+                    l_aeroportos_diferentes.setVisible(true);
+                    l_falta_aeroporto.setVisible(false);
+                }else{
+                    l_falta_aeroporto.setVisible(false);
+                    l_aeroportos_diferentes.setVisible(false);
+                    String data = tf_partida.getText();
+                    int origem = aeroportos_partida.getSelectedIndex();
+                    int destino = aeroportos_chegada.getSelectedIndex();
+                    Aeroporto a_origem = aeroportos.get(origem - 1);
+                    Aeroporto a_destino = aeroportos.get(destino - 1);
+                    ArrayList<Voo> voos_pedidos = new ArrayList<Voo>();
+                    for(int i = 0; i < voos.size(); i++){
+                        if(a_origem.equals(voos.get(i).getOrigem()) && a_destino.equals(voos.get(i).getDestino()) && data.equals(voos.get(i).getDate())){
+                            voos_pedidos.add(voos.get(i));
+                        }
+                    }
+                    String[] columnsName = {"Código", "Companhia", "Origem", "Destino", "Partida", "Chegada", "Data", "Estado"};
+                    Object[][] data_voos = new Object[voos_pedidos.size() + 1][8];
+                    //adicionar os detalhes dos voos a tabela
+                    data_voos[0][0] = "Código";
+                    data_voos[0][1] = "Companhia";
+                    data_voos[0][2] = "Origem";
+                    data_voos[0][3] = "Destino";
+                    data_voos[0][4] = "Partida";
+                    data_voos[0][5] = "Chegada";
+                    data_voos[0][6] = "Data";
+                    data_voos[0][7] = "Estado";
+                    ordenar_voos();
+                    if(voos_pedidos.size() > 0){
+                        for(int i = 1; i < voos_pedidos.size() + 1; i++){
+                            for(int j = 0; j < 8; j++){
+                                if(j == 0){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getCodigo();
+                                }else if(j == 1){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getCompanhia().getNome();
+                                }else if(j == 2){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getOrigem().getNome();
+                                }else if(j == 3){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getDestino().getNome();
+                                }else if(j == 4){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getPartida();
+                                }else if(j == 5){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getChegada();
+                                }else if(j == 6){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getDate();
+                                }else{
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getEstado();
+                                }
+                            }
+                        }
+                    }
+                    TableModel model = new DefaultTableModel(data_voos, columnsName){
+                        public boolean isCellEditable(int row, int column){
+                            return false;//This causes all cells to be not editable
+                        }
+                    };
+                    JTable table = new JTable(model){
+                        public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+                            Component c = super.prepareRenderer(renderer, row, column);
+                            if(!c.getBackground().equals(getSelectionBackground())) {
+                                Color coleur = (row == 0 ? Color.CYAN : Color.WHITE);
+                                c.setBackground(coleur);
+                                coleur = null;
+                            }
+                            return c;
+                        }
+                    };
+                    table.setBounds(25, 150, 850, 585);
+                    p_showFligths.add(table);
+                    // button voltar p_showFligths
+                    JButton b2_voltar = new JButton("Voltar");
+                    b2_voltar.setBounds(20, 20, 100, 50);
+                    b2_voltar.addActionListener(l ->{
+                        p_showFligths.removeAll();
+                        frame.setContentPane(p_buyFligths);
+                        frame.revalidate();
+                    });
+                    p_showFligths.add(b2_voltar);
+                    frame.setContentPane(p_showFligths);
+                    frame.revalidate();
+                }
             }else{
-                //voos de ida e volta
+                //cria uma tabela com os voos de ida e volta
+                if(aeroportos_partida.getSelectedItem().equals("") || aeroportos_chegada.getSelectedItem().equals("")){
+                    l_falta_aeroporto.setVisible(true);
+                    l_aeroportos_diferentes.setVisible(false);
+                }else if(aeroportos_partida.getSelectedIndex() == aeroportos_chegada.getSelectedIndex()){
+                    l_aeroportos_diferentes.setVisible(true);
+                    l_falta_aeroporto.setVisible(false);
+                }else{
+                    l_falta_aeroporto.setVisible(false);
+                    l_aeroportos_diferentes.setVisible(false);
+                    String data = tf_partida.getText();
+                    String data_volta = tf_regresso.getText();
+                    int origem = aeroportos_partida.getSelectedIndex();
+                    int destino = aeroportos_chegada.getSelectedIndex();
+                    Aeroporto a_origem = aeroportos.get(origem - 1);
+                    Aeroporto a_destino = aeroportos.get(destino - 1);
+                    ArrayList<Voo> voos_pedidos = new ArrayList<Voo>();
+                    for(int i = 0; i < voos.size(); i++){
+                        if((a_origem.equals(voos.get(i).getOrigem()) && a_destino.equals(voos.get(i).getDestino()) && data.equals(voos.get(i).getDate())) || a_destino.equals(voos.get(i).getOrigem()) && a_origem.equals(voos.get(i).getDestino()) && data_volta.equals(voos.get(i).getDate())){
+                            voos_pedidos.add(voos.get(i));
+                        }
+                    }
+                    String[] columnsName = {"Código", "Companhia", "Origem", "Destino", "Partida", "Chegada", "Data", "Estado"};
+                    Object[][] data_voos = new Object[voos_pedidos.size() + 1][8];
+                    //adicionar os detalhes dos voos a tabela
+                    data_voos[0][0] = "Código";
+                    data_voos[0][1] = "Companhia";
+                    data_voos[0][2] = "Origem";
+                    data_voos[0][3] = "Destino";
+                    data_voos[0][4] = "Partida";
+                    data_voos[0][5] = "Chegada";
+                    data_voos[0][6] = "Data";
+                    data_voos[0][7] = "Estado";
+                    ordenar_voos();
+                    if(voos_pedidos.size() > 0){
+                        for(int i = 1; i < voos_pedidos.size() + 1; i++){
+                            for(int j = 0; j < 8; j++){
+                                if(j == 0){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getCodigo();
+                                }else if(j == 1){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getCompanhia().getNome();
+                                }else if(j == 2){
+                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getOrigem().getNome();
+                                }else if(j == 3){
+                                    data_voos[i][j] = "(" + voos_pedidos.get(i - 1).getDestino().getAbreviatura() + ")" + voos_pedidos.get(i - 1).getDestino().getNome();
+                                }else if(j == 4){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getPartida();
+                                }else if(j == 5){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getChegada();
+                                }else if(j == 6){
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getDate();
+                                }else{
+                                    data_voos[i][j] = voos_pedidos.get(i - 1).getEstado();
+                                }
+                            }
+                        }
+                    }
+                    TableModel model = new DefaultTableModel(data_voos, columnsName){
+                        public boolean isCellEditable(int row, int column){
+                            return false;//This causes all cells to be not editable
+                        }
+                    };
+                    JTable table = new JTable(model){
+                        public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+                            Component c = super.prepareRenderer(renderer, row, column);
+                            if(!c.getBackground().equals(getSelectionBackground())) {
+                                Color coleur = (row == 0 ? Color.CYAN : Color.WHITE);
+                                c.setBackground(coleur);
+                                coleur = null;
+                            }
+                            return c;
+                        }
+                    };
+                    table.setBounds(25, 150, 850, 585);
+                    p_showFligths.add(table);
+                    // button voltar p_showFligths
+                    JButton b2_voltar = new JButton("Voltar");
+                    b2_voltar.setBounds(20, 20, 100, 50);
+                    b2_voltar.addActionListener(l ->{
+                        p_showFligths.removeAll();
+                        frame.setContentPane(p_buyFligths);
+                        frame.revalidate();
+                    });
+                    p_showFligths.add(b2_voltar);
+                    frame.setContentPane(p_showFligths);
+                    frame.revalidate();
+                }
             }
         });
         p_buyFligths.add(b_procurar);
@@ -774,6 +984,8 @@ public class Main {
         b_terminar.addActionListener(e ->{
             aeroportos_partida.setSelectedIndex(0);
             aeroportos_chegada.setSelectedIndex(0);
+            l_falta_aeroporto.setVisible(false);
+            l_aeroportos_diferentes.setVisible(false);
             cb_ida.setSelected(true);
             cb_ida_volta.setSelected(false);
             tf_partida.setText("");
@@ -785,11 +997,1024 @@ public class Main {
         });
         p_buyFligths.add(b_terminar);
 
+        
+
+        //Admin items
+        // Companhias
+        // companhias label
+        JLabel l_companhias = new JLabel("Companhias");
+        l_companhias.setBounds(425, 405, 200, 20);
+        comp = true;
+        p_admingeneral.add(l_companhias);
+        // companhias combobox
+        JComboBox <String> cb_companhias = new JComboBox<>();
+        cb_companhias.setBounds(400, 425, 200, 30);
+        cb_companhias.addItem("");
+        for(int i = 0; i < companhias.size(); i++){
+            cb_companhias.addItem(companhias.get(i).getNome());
+        }
+        p_admingeneral.add(cb_companhias);
+        // Avioes
+        // avioes label
+        JLabel l_avioes = new JLabel("Aviões");
+        l_avioes.setBounds(425, 405, 200, 20);
+        l_avioes.setVisible(false);
+        avi = false;
+        p_admingeneral.add(l_avioes);
+        // avioes combobox
+        JComboBox <String> cb_avioes = new JComboBox<>();
+        cb_avioes.setBounds(400, 425, 200, 30);
+        cb_avioes.addItem("");
+        for(int i = 0; i < avioes.size(); i++){
+            cb_avioes.addItem(avioes.get(i).getModelo());
+        }
+        cb_avioes.setVisible(false);
+        p_admingeneral.add(cb_avioes);
+        // Pilotos
+        // pilotos label
+        JLabel l_pilotos = new JLabel("Pilotos");
+        l_pilotos.setBounds(425, 405, 200, 20);
+        l_pilotos.setVisible(false);
+        pil = false;
+        p_admingeneral.add(l_pilotos);
+        // pilotos combobox
+        JComboBox <String> cb_pilotos = new JComboBox<>();
+        cb_pilotos.setBounds(400, 425, 200, 30);
+        cb_pilotos.addItem("");
+        for(int i = 0; i < pilotos.size(); i++){
+            cb_pilotos.addItem(pilotos.get(i).getNome());
+        }
+        cb_pilotos.setVisible(false);
+        p_admingeneral.add(cb_pilotos);
+        // Aeroportos
+        // aeroportos label
+        JLabel l_aeroportos = new JLabel("Aeroportos");
+        l_aeroportos.setBounds(425, 405, 200, 20);
+        l_aeroportos.setVisible(false);
+        aero = false;
+        p_admingeneral.add(l_aeroportos);
+        // aeroportos combobox
+        JComboBox <String> cb_aeroportos = new JComboBox<>();
+        cb_aeroportos.setBounds(400, 425, 200, 30);
+        cb_aeroportos.addItem("");
+        for(int i = 0; i < aeroportos.size(); i++){
+            cb_aeroportos.addItem(aeroportos.get(i).getCidade() + "(" + aeroportos.get(i).getAbreviatura() + ")");
+        }
+        cb_aeroportos.setVisible(false);
+        p_admingeneral.add(cb_aeroportos);
+        // botoes de troca de classe
+        // companhias button
+        JButton b_companhias = new JButton("Companhias");
+        b_companhias.setBounds(165, 250, 150, 75);
+        b_companhias.addActionListener(e ->{
+            comp = true;
+            avi = false;
+            pil = false;
+            aero = false;
+            l_companhias.setVisible(true);
+            cb_companhias.setVisible(true);
+            l_avioes.setVisible(false);
+            cb_avioes.setSelectedIndex(0);
+            cb_avioes.setVisible(false);
+            l_pilotos.setVisible(false);
+            cb_pilotos.setSelectedIndex(0);
+            cb_pilotos.setVisible(false);
+            l_aeroportos.setVisible(false);
+            cb_aeroportos.setSelectedIndex(0);
+            cb_aeroportos.setVisible(false);
+        });
+        p_admingeneral.add(b_companhias);
+        // avioes button
+        JButton b_avioes = new JButton("Aviões");
+        b_avioes.setBounds(340, 250, 150, 75);
+        b_avioes.addActionListener(e ->{
+            comp = false;
+            avi = true;
+            pil = false;
+            aero = false;
+            l_avioes.setVisible(true);
+            cb_avioes.setVisible(true);
+            l_companhias.setVisible(false);
+            cb_companhias.setSelectedIndex(0);
+            cb_companhias.setVisible(false);
+            l_pilotos.setVisible(false);
+            cb_pilotos.setSelectedIndex(0);
+            cb_pilotos.setVisible(false);
+            l_aeroportos.setVisible(false);
+            cb_aeroportos.setSelectedIndex(0);
+            cb_aeroportos.setVisible(false);
+        });
+        p_admingeneral.add(b_avioes);
+        // pilotos button
+        JButton b_pilotos = new JButton("Pilotos");
+        b_pilotos.setBounds(515, 250, 150, 75);
+        b_pilotos.addActionListener(e ->{
+            comp = false;
+            avi = false;
+            pil = true;
+            aero = false;
+            l_pilotos.setVisible(true);
+            cb_pilotos.setVisible(true);
+            l_avioes.setVisible(false);
+            cb_avioes.setSelectedIndex(0);
+            cb_avioes.setVisible(false);
+            l_companhias.setVisible(false);
+            cb_companhias.setSelectedIndex(0);
+            cb_companhias.setVisible(false);
+            l_aeroportos.setVisible(false);
+            cb_aeroportos.setSelectedIndex(0);
+            cb_aeroportos.setVisible(false);
+        });
+        p_admingeneral.add(b_pilotos);
+        // aeroportos button
+        JButton b_aeroportos = new JButton("Aeroportos");
+        b_aeroportos.setBounds(690, 250, 150, 75);
+        b_aeroportos.addActionListener(e ->{
+            comp = false;
+            avi = false;
+            pil = false;
+            aero = true;
+            l_aeroportos.setVisible(true);
+            cb_aeroportos.setVisible(true);
+            l_avioes.setVisible(false);
+            cb_avioes.setSelectedIndex(0);
+            cb_avioes.setVisible(false);
+            l_pilotos.setVisible(false);
+            cb_pilotos.setSelectedIndex(0);
+            cb_pilotos.setVisible(false);
+            l_companhias.setVisible(false);
+            cb_companhias.setSelectedIndex(0);
+            cb_companhias.setVisible(false);
+        });
+        p_admingeneral.add(b_aeroportos);
+        // perquisar voos button
+        JButton b1_procurar = new JButton("Procurar Voos ->");
+        b1_procurar.setBounds(600, 550, 200, 50);
+        b1_procurar.addActionListener(e ->{
+            ArrayList<Voo> voos_a_adicionar = new ArrayList<Voo>();
+            int indice = 0;
+            if(comp == true && cb_companhias.getSelectedIndex() > 0){
+                indice = cb_companhias.getSelectedIndex();
+                for(int i = 0; i < voos.size(); i++){
+                    if(voos.get(i).getCompanhia().equals(companhias.get(indice - 1))){ 
+                        voos_a_adicionar.add(voos.get(i));
+                    }
+                }
+            }else if(avi == true && cb_avioes.getSelectedIndex() > 0){
+                indice = cb_avioes.getSelectedIndex();
+                for(int i = 0; i < voos.size(); i++){
+                    if(voos.get(i).getAviao().equals(avioes.get(indice - 1))){ 
+                        voos_a_adicionar.add(voos.get(i));
+                    }
+                }
+            }else if(pil == true && cb_pilotos.getSelectedIndex() > 0){
+                indice = cb_pilotos.getSelectedIndex();
+                for(int i = 0; i < voos.size(); i++){
+                    if(voos.get(i).getPiloto().equals(pilotos.get(indice - 1))){ 
+                        voos_a_adicionar.add(voos.get(i));
+                    }
+                }
+            }else if(aero == true && cb_aeroportos.getSelectedIndex() > 0){
+                indice = cb_aeroportos.getSelectedIndex();
+                for(int i = 0; i < voos.size(); i++){
+                    if(voos.get(i).getOrigem().equals(aeroportos.get(indice - 1)) || voos.get(i).getDestino().equals(aeroportos.get(indice - 1))){ 
+                        voos_a_adicionar.add(voos.get(i));
+                    }
+                }
+            }
+            // mostrar mensagem caso o item escolhido tenha o indice 0
+            // caso contrario constroi a tabela pedida 
+            if(indice == 0){
+                JLabel l_indice = new JLabel("Escolha um objeto válido.");
+                l_indice.setBounds(175, 125, 1000, 500);
+                l_indice.setForeground(Color.RED);
+                l_indice.setFont(new Font("Arial", Font.BOLD, 50));
+                p_admintables.add(l_indice);
+            }else{
+                String[] columnsName = {"Código", "Companhia", "Origem", "Destino", "Partida", "Chegada", "Data", "Estado"};
+                Object[][] data_voos = new Object[voos_a_adicionar.size() + 1][8];
+                //adicionar os detalhes dos voos a tabela
+                data_voos[0][0] = "Código";
+                data_voos[0][1] = "Companhia";
+                data_voos[0][2] = "Origem";
+                data_voos[0][3] = "Destino";
+                data_voos[0][4] = "Partida";
+                data_voos[0][5] = "Chegada";
+                data_voos[0][6] = "Data";
+                data_voos[0][7] = "Estado";
+                ordenar_voos();
+                if(voos_a_adicionar.size() > 0){
+                    for(int i = 1; i < voos_a_adicionar.size() + 1; i++){
+                        for(int j = 0; j < 8; j++){
+                            if(j == 0){
+                                data_voos[i][j] = voos_a_adicionar.get(i - 1).getCodigo();
+                            }else if(j == 1){
+                                data_voos[i][j] = voos_a_adicionar.get(i - 1).getCompanhia().getNome();
+                            }else if(j == 2){
+                                data_voos[i][j] = "(" + voos_a_adicionar.get(i - 1).getOrigem().getAbreviatura() + ")" + voos_a_adicionar.get(i - 1).getOrigem().getNome();
+                            }else if(j == 3){
+                                data_voos[i][j] = "(" + voos_a_adicionar.get(i - 1).getDestino().getAbreviatura() + ")" + voos_a_adicionar.get(i - 1).getDestino().getNome();
+                            }else if(j == 4){
+                                data_voos[i][j] = voos_a_adicionar.get(i - 1).getPartida();
+                            }else if(j == 5){
+                                data_voos[i][j] = voos_a_adicionar.get(i - 1).getChegada();
+                            }else if(j == 6){
+                                data_voos[i][j] = voos_a_adicionar.get(i - 1).getDate();
+                            }else{
+                                data_voos[i][j] = voos_a_adicionar.get(i - 1).getEstado();
+                            }
+                        }
+                    }
+                }
+                TableModel model = new DefaultTableModel(data_voos, columnsName){
+                    public boolean isCellEditable(int row, int column){
+                        return false;//This causes all cells to be not editable
+                    }
+                };
+                JTable table = new JTable(model){
+                    public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+                        Component c = super.prepareRenderer(renderer, row, column);
+                        if(!c.getBackground().equals(getSelectionBackground())) {
+                            Color coleur = (row == 0 ? Color.CYAN : Color.WHITE);
+                            c.setBackground(coleur);
+                            coleur = null;
+                        }
+                        return c;
+                    }
+                };
+                table.setBounds(25, 150, 700, 585);
+                p_admintables.add(table);
+                // remover voo button
+                JButton b_remover = new JButton("-   Remover Voo");
+                b_remover.setBounds(775, 650, 150, 75);
+                b_remover.addActionListener(l ->{
+                    int row = table.getSelectedRow();
+                    if(row > 0){
+                        // remove o voo da tabela e do xml
+                        for(int i = 0; i < voos.size(); i++){
+                            if(voos_a_adicionar.get(row - 1).equals(voos.get(i))){
+                                voos.remove(i);
+                            }
+                        }
+                        ((DefaultTableModel) model).removeRow(row);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                        JOptionPane.showMessageDialog(null, "O voo foi removido com sucesso!");
+                    }
+                });
+                p_admintables.add(b_remover);
+                // criar objetos button
+                if(comp == true){
+                    //TODO
+                    // companhias label
+                    JLabel l1_companhias = new JLabel("Companhias");
+                    l1_companhias.setBounds(420, 200, 150, 30);
+                    p_remover.add(l1_companhias);
+                    // companhias combobox
+                    JComboBox <String> cb1_companhias = new JComboBox<String>();
+                    cb1_companhias.setBounds(400, 225, 200, 30);
+                    cb1_companhias.addItem("");
+                    if(companhias.size() > 0){
+                        for(int i = 0; i < companhias.size(); i++){
+                            cb1_companhias.addItem(companhias.get(i).getNome());
+                        }   
+                    }
+                    p_remover.add(cb1_companhias);
+                    //remover button
+                    JButton b1_remover = new JButton("-   Remover");
+                    b1_remover.setBounds(525, 500, 150, 75);
+                    b1_remover.addActionListener(l ->{
+                        int i = cb1_companhias.getSelectedIndex() - 1;
+                        for(int j = 0; j < voos.size(); j++){
+                            if(voos.get(j).getCompanhia().equals(companhias.get(i))){
+                                voos.remove(j);
+                            }
+                        }
+                        companhias.remove(i);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                        p_remover.removeAll();
+                        cb_companhias.removeItemAt(i + 1);
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                        JOptionPane.showMessageDialog(null, "A companhia foi removida com sucesso!");
+                    });
+                    p_remover.add(b1_remover);
+                    // criar button
+                    JButton b1_criar = new JButton("+   Criar");
+                    b1_criar.setBounds(525, 500, 150, 75);
+                    p_criar.add(b1_criar);
+                    //cancelar button
+                    JButton b_cancelar = new JButton("x   Cancelar");
+                    b_cancelar.setBounds(325, 500, 150, 75);
+                    b_cancelar.addActionListener(l ->{
+                        p_remover.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_remover.add(b_cancelar);
+                    JButton b2_cancelar = new JButton("x   Cancelar");
+                    b2_cancelar.setBounds(325, 500, 150, 75);
+                    b2_cancelar.addActionListener(l ->{
+                        p_criar.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_criar.add(b2_cancelar);
+
+                    //criar companhia button
+                    JButton b_criar_companhia = new JButton("+   Criar Companhia");
+                    b_criar_companhia.setBounds(775, 150, 150, 75);
+                    b_criar_companhia.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_criar);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_criar_companhia);
+                    //remover companhia button
+                    JButton b_remover_companhia = new JButton("-   Remover Companhia");
+                    b_remover_companhia.setBounds(775, 250, 150, 75);
+                    b_remover_companhia.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_remover);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_remover_companhia);
+                }else if(avi == true){
+                    // TODO
+                    // Avioes label
+                    JLabel l1_avioes = new JLabel("Aviões");
+                    l1_avioes.setBounds(420, 200, 150, 30);
+                    p_remover.add(l1_avioes);
+                    // avioes combobox
+                    JComboBox <String> cb1_avioes = new JComboBox<String>();
+                    cb1_avioes.setBounds(400, 225, 200, 30);
+                    cb1_avioes.addItem("");
+                    if(avioes.size() > 0){
+                        for(int i = 0; i < avioes.size(); i++){
+                            cb1_avioes.addItem(avioes.get(i).getModelo());
+                        }   
+                    }
+                    p_remover.add(cb1_avioes);
+                    //remover button
+                    JButton b1_remover = new JButton("-   Remover");
+                    b1_remover.setBounds(525, 500, 150, 75);
+                    b1_remover.addActionListener(l ->{
+                        int i = cb1_avioes.getSelectedIndex() - 1;
+                        for(int j = 0; j < voos.size(); j++){
+                            if(voos.get(j).getAviao().equals(avioes.get(i))){
+                                voos.remove(j);
+                            }
+                        }
+                        avioes.remove(i);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                        p_remover.removeAll();
+                        cb_avioes.removeItemAt(i + 1);
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                        JOptionPane.showMessageDialog(null, "O Avião foi removido com sucesso!");
+                    });
+                    p_remover.add(b1_remover);
+                    // criar button
+                    JButton b1_criar = new JButton("+   Criar");
+                    b1_criar.setBounds(525, 500, 150, 75);
+                    p_criar.add(b1_criar);
+                    //cancelar button
+                    JButton b_cancelar = new JButton("x   Cancelar");
+                    b_cancelar.setBounds(325, 500, 150, 75);
+                    b_cancelar.addActionListener(l ->{
+                        p_remover.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_remover.add(b_cancelar);
+                    JButton b2_cancelar = new JButton("x   Cancelar");
+                    b2_cancelar.setBounds(325, 500, 150, 75);
+                    b2_cancelar.addActionListener(l ->{
+                        p_criar.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_criar.add(b2_cancelar);
+
+                    //criar aviao button
+                    JButton b_criar_aviao = new JButton("+   Criar Avião");
+                    b_criar_aviao.setBounds(775, 150, 150, 75);
+                    b_criar_aviao.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_criar);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_criar_aviao);
+                    //remover aviao button
+                    JButton b_remover_aviao = new JButton("-   Remover Avião");
+                    b_remover_aviao.setBounds(775, 250, 150, 75);
+                    b_remover_aviao.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_remover);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_remover_aviao);
+                }else if(pil == true){
+                    // TODO
+                    // pilotos label
+                    JLabel l1_pilotos = new JLabel("Pilotos");
+                    l1_pilotos.setBounds(420, 200, 150, 30);
+                    p_remover.add(l1_pilotos);
+                    // pilotos combobox
+                    JComboBox <String> cb1_pilotos = new JComboBox<String>();
+                    cb1_pilotos.setBounds(400, 225, 200, 30);
+                    cb1_pilotos.addItem("");
+                    if(pilotos.size() > 0){
+                        for(int i = 0; i < pilotos.size(); i++){
+                            cb1_pilotos.addItem(pilotos.get(i).getNome());
+                        }   
+                    }
+                    p_remover.add(cb1_pilotos);
+                    //remover button
+                    JButton b1_remover = new JButton("-   Remover");
+                    b1_remover.setBounds(525, 500, 150, 75);
+                    b1_remover.addActionListener(l ->{
+                        int i = cb1_pilotos.getSelectedIndex() - 1;
+                        for(int j = 0; j < voos.size(); j++){
+                            if(voos.get(j).getPiloto().equals(pilotos.get(i))){
+                                voos.remove(j);
+                            }
+                        }
+                        pilotos.remove(i);
+                        // remover a conta do piloto
+                        int num = 0;
+                        for(int j = 0; j < contas.size(); j++){
+                            if(contas.get(j).getEstatuto().equals("Piloto")){
+                                if(num == i){
+                                    contas.remove(j);
+                                }
+                                num += 1;
+                            }
+                        }
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                        p_remover.removeAll();
+                        cb_pilotos.removeItemAt(i + 1);
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                        JOptionPane.showMessageDialog(null, "O Piloto foi removido com sucesso!");
+                    });
+                    p_remover.add(b1_remover);
+                    // criar button
+                    JButton b1_criar = new JButton("+   Criar");
+                    b1_criar.setBounds(525, 500, 150, 75);
+                    p_criar.add(b1_criar);
+                    //cancelar button
+                    JButton b_cancelar = new JButton("x   Cancelar");
+                    b_cancelar.setBounds(325, 500, 150, 75);
+                    b_cancelar.addActionListener(l ->{
+                        p_remover.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_remover.add(b_cancelar);
+                    JButton b2_cancelar = new JButton("x   Cancelar");
+                    b2_cancelar.setBounds(325, 500, 150, 75);
+                    b2_cancelar.addActionListener(l ->{
+                        p_criar.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_criar.add(b2_cancelar);
+
+                    //criar piloto button
+                    JButton b_criar_piloto = new JButton("+   Criar Piloto");
+                    b_criar_piloto.setBounds(775, 150, 150, 75);
+                    b_criar_piloto.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_criar);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_criar_piloto);
+                    //remover piloto button
+                    JButton b_remover_piloto = new JButton("-   Remover Piloto");
+                    b_remover_piloto.setBounds(775, 250, 150, 75);
+                    b_remover_piloto.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_remover);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_remover_piloto);
+                }else{
+                    // TODO
+                    // aeroportos label
+                    JLabel l1_aeroportos = new JLabel("Aeroportos");
+                    l1_aeroportos.setBounds(420, 200, 150, 30);
+                    p_remover.add(l1_aeroportos);
+                    // aeroportos combobox
+                    JComboBox <String> cb1_aeroportos = new JComboBox<String>();
+                    cb1_aeroportos.setBounds(400, 225, 200, 30);
+                    cb1_aeroportos.addItem("");
+                    if(aeroportos.size() > 0){
+                        for(int i = 0; i < aeroportos.size(); i++){
+                            cb1_aeroportos.addItem(aeroportos.get(i).getCidade() + "(" + aeroportos.get(i).getAbreviatura() + ")");
+                        }   
+                    }
+                    p_remover.add(cb1_aeroportos);
+                    //remover button
+                    JButton b1_remover = new JButton("-   Remover");
+                    b1_remover.setBounds(525, 500, 150, 75);
+                    b1_remover.addActionListener(l ->{
+                        int i = cb1_aeroportos.getSelectedIndex() - 1;
+                        for(int j = 0; j < voos.size(); j++){
+                            if(voos.get(j).getOrigem().equals(aeroportos.get(i)) || voos.get(j).getDestino().equals(aeroportos.get(i))){
+                                voos.remove(j);
+                            }
+                        }
+                        aeroportos.remove(i);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                        p_remover.removeAll();
+                        cb_aeroportos.removeItemAt(i + 1);
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                        JOptionPane.showMessageDialog(null, "O Aeroporto foi removido com sucesso!");
+                    });
+                    p_remover.add(b1_remover);
+                    // criar button
+                    JButton b1_criar = new JButton("+   Criar");
+                    b1_criar.setBounds(525, 500, 150, 75);
+                    p_criar.add(b1_criar);
+                    //cancelar button
+                    JButton b_cancelar = new JButton("x   Cancelar");
+                    b_cancelar.setBounds(325, 500, 150, 75);
+                    b_cancelar.addActionListener(l ->{
+                        p_remover.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_remover.add(b_cancelar);
+                    JButton b2_cancelar = new JButton("x   Cancelar");
+                    b2_cancelar.setBounds(325, 500, 150, 75);
+                    b2_cancelar.addActionListener(l ->{
+                        p_criar.removeAll();
+                        frame.setContentPane(p_admingeneral);
+                        frame.revalidate();
+                    });
+                    p_criar.add(b2_cancelar);
+
+                    //criar aeroporto button
+                    JButton b_criar_aeroporto = new JButton("+   Criar Aeroporto");
+                    b_criar_aeroporto.setBounds(775, 150, 150, 75);
+                    b_criar_aeroporto.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_criar);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_criar_aeroporto);
+                    //remover aeroporto button
+                    JButton b_remover_aeroporto = new JButton("-   Remover Aeroporto");
+                    b_remover_aeroporto.setBounds(775, 250, 150, 75);
+                    b_remover_aeroporto.addActionListener(l ->{
+                        comp = true;
+                        avi = false;
+                        pil = false;
+                        aero = false;
+                        p_admintables.removeAll();
+                        frame.setContentPane(p_remover);
+                        frame.revalidate();
+                    });
+                    p_admintables.add(b_remover_aeroporto);
+                }
+            }
+            // voltar button
+            JButton b2_voltar = new JButton("Voltar");
+            b2_voltar.setBounds(20, 20, 100, 50);
+            b2_voltar.addActionListener(l ->{
+                p_admintables.removeAll();
+                comp = true;
+                avi = false;
+                pil = false;
+                aero = false;
+                frame.setContentPane(p_admingeneral);
+                frame.revalidate();
+            });
+            p_admintables.add(b2_voltar);
+            // resetar as combobox
+            l_companhias.setVisible(true);
+            cb_companhias.setSelectedIndex(0);
+            cb_companhias.setVisible(true);
+            l_avioes.setVisible(false);
+            cb_avioes.setSelectedIndex(0);
+            cb_avioes.setVisible(false);
+            l_pilotos.setVisible(false);
+            cb_pilotos.setSelectedIndex(0);
+            cb_pilotos.setVisible(false);
+            l_aeroportos.setVisible(false);
+            cb_aeroportos.setSelectedIndex(0);
+            cb_aeroportos.setVisible(false);
+            frame.setContentPane(p_admintables);
+            frame.revalidate();
+        });
+        p_admingeneral.add(b1_procurar);
+        // ver todos os voos button
+        JButton b_vertodososvoos = new JButton("Ver todos os voos");
+        b_vertodososvoos.setBounds(25, 25, 150, 75);
+        b_vertodososvoos.addActionListener(e ->{
+            comp = true;
+            avi = false;
+            pil = false;
+            aero = false;
+            l_companhias.setVisible(true);
+            cb_companhias.setSelectedIndex(0);
+            cb_companhias.setVisible(true);
+            l_avioes.setVisible(false);
+            cb_avioes.setSelectedIndex(0);
+            cb_avioes.setVisible(false);
+            l_pilotos.setVisible(false);
+            cb_pilotos.setSelectedIndex(0);
+            cb_pilotos.setVisible(false);
+            l_aeroportos.setVisible(false);
+            cb_aeroportos.setSelectedIndex(0);
+            cb_aeroportos.setVisible(false);
+            // voltar button
+            JButton b2_voltar = new JButton("Voltar");
+            b2_voltar.setBounds(20, 20, 100, 50);
+            b2_voltar.addActionListener(l ->{
+                p_admintables.removeAll();
+                frame.setContentPane(p_admingeneral);
+                frame.revalidate();
+            });
+            p_admintables.add(b2_voltar);
+            // criar e mostra a tabela com todos voos
+            String[] columnsName = {"Código", "Companhia", "Origem", "Destino", "Partida", "Chegada", "Data", "Estado"};
+            Object[][] data_voos = new Object[voos.size() + 1][8];
+            //adicionar os detalhes dos voos a tabela
+            data_voos[0][0] = "Código";
+            data_voos[0][1] = "Companhia";
+            data_voos[0][2] = "Origem";
+            data_voos[0][3] = "Destino";
+            data_voos[0][4] = "Partida";
+            data_voos[0][5] = "Chegada";
+            data_voos[0][6] = "Data";
+            data_voos[0][7] = "Estado";
+            ordenar_voos();
+            reverse_voos();
+            if(voos.size() > 0){
+                for(int i = 1; i < voos.size() + 1; i++){
+                    for(int j = 0; j < 8; j++){
+                        if(j == 0){
+                            data_voos[i][j] = voos.get(i - 1).getCodigo();
+                        }else if(j == 1){
+                            data_voos[i][j] = voos.get(i - 1).getCompanhia().getNome();
+                        }else if(j == 2){
+                            data_voos[i][j] = "(" + voos.get(i - 1).getOrigem().getAbreviatura() + ")" + voos.get(i - 1).getOrigem().getNome();
+                        }else if(j == 3){
+                            data_voos[i][j] = "(" + voos.get(i - 1).getDestino().getAbreviatura() + ")" + voos.get(i - 1).getDestino().getNome();
+                        }else if(j == 4){
+                            data_voos[i][j] = voos.get(i - 1).getPartida();
+                        }else if(j == 5){
+                            data_voos[i][j] = voos.get(i - 1).getChegada();
+                        }else if(j == 6){
+                            data_voos[i][j] = voos.get(i - 1).getDate();
+                        }else{
+                            data_voos[i][j] = voos.get(i - 1).getEstado();
+                        }
+                    }
+                }
+            }
+            TableModel model = new DefaultTableModel(data_voos, columnsName){
+                public boolean isCellEditable(int row, int column){
+                    return false;//This causes all cells to be not editable
+                }
+            };
+            JTable table = new JTable(model){
+                public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+                    Component c = super.prepareRenderer(renderer, row, column);
+                    if(!c.getBackground().equals(getSelectionBackground())) {
+                        Color coleur = (row == 0 ? Color.CYAN : Color.WHITE);
+                        c.setBackground(coleur);
+                        coleur = null;
+                    }
+                    return c;
+                }
+            };
+            table.setBounds(25, 150, 700, 585);
+            // desabilitar a escolha de multiplas linhas na tabela
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            p_admintables.add(table);
+            // voo completo button
+            JButton b_completo = new JButton("Voo Completo");
+            b_completo.setBounds(775, 150, 150, 75);
+            b_completo.addActionListener(l ->{
+                int row = table.getSelectedRow();
+                if(row > 0){
+                    // atualiza o estado do voo para completo
+                    if(voos.get(row - 1).getEstado().equals("A Tempo") || voos.get(row - 1).getEstado().equals("Atrasado")){
+                        voos.get(row - 1).completo();
+                        table.setValueAt("Completo", row, 7);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            });
+            p_admintables.add(b_completo);
+            // voo atrasado button
+            JButton b_atrasado = new JButton("Voo Atrasado");
+            b_atrasado.setBounds(775, 250, 150, 75);
+            b_atrasado.addActionListener(l ->{
+                int row = table.getSelectedRow();
+                if(row > 0){
+                    // atualiza o estado do voo para atrasado
+                    if(voos.get(row - 1).getEstado().equals("A Tempo")){
+                        voos.get(row - 1).atrasado();
+                        table.setValueAt("Atrasado", row, 7);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            });
+            p_admintables.add(b_atrasado);
+            // voo cancelado button
+            JButton b_cancelado = new JButton("Voo Cancelado");
+            b_cancelado.setBounds(775, 350, 150, 75);
+            b_cancelado.addActionListener(l ->{
+                int row = table.getSelectedRow();
+                if(row > 0){
+                    // atualiza o estado do voo para cancelado
+                    if(voos.get(row - 1).getEstado().equals("A Tempo") || voos.get(row - 1).getEstado().equals("Atrasado")){
+                        voos.get(row - 1).cancelado();
+                        table.setValueAt("Cancelado", row, 7);
+                        try {
+                            writeXml();
+                        } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            });
+            p_admintables.add(b_cancelado);
+            // remover voo button
+            JButton b_remover = new JButton("-   Remover Voo");
+            b_remover.setBounds(775, 550, 150, 75);
+            b_remover.addActionListener(l ->{
+                int row = table.getSelectedRow();
+                if(row > 0){
+                    // remove o voo da tabela e do xml
+                    voos.remove(row - 1);
+                    ((DefaultTableModel) model).removeRow(row);
+                    try {
+                        writeXml();
+                    } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                        e1.printStackTrace();
+                    }
+                    JOptionPane.showMessageDialog(null, "O voo foi removido com sucesso!");
+                }
+            });
+            p_admintables.add(b_remover);
+            // criar voo button
+            JButton b_criar_voo = new JButton("+   Criar Voo");
+            b_criar_voo.setBounds(775, 650, 150, 75);
+            b_criar_voo.addActionListener(l ->{
+                // codigo
+                // codigo label
+                JLabel l_codigo = new JLabel("Código");
+                l_codigo.setBounds(165, 125, 150, 30);
+                p_criar_voo.add(l_codigo);
+                // codigo textfield
+                JTextField tf_codigo = new JTextField();
+                tf_codigo.setBounds(155, 150, 150, 30);
+                p_criar_voo.add(tf_codigo);
+                // Partida
+                // partida label
+                JLabel l1_partida = new JLabel("Partida");
+                l1_partida.setBounds(345, 125, 150, 30);
+                p_criar_voo.add(l1_partida);
+                // partida textfield
+                JTextField tf1_partida = new JTextField();
+                tf1_partida.setBounds(335, 150, 150, 30);
+                p_criar_voo.add(tf1_partida);
+                // Chegada
+                // chegada label
+                JLabel l1_chegada = new JLabel("Chegada");
+                l1_chegada.setBounds(525, 125, 150, 30);
+                p_criar_voo.add(l1_chegada);
+                // chegada textfield
+                JTextField tf1_chegada = new JTextField();
+                tf1_chegada.setBounds(515, 150, 150, 30);
+                p_criar_voo.add(tf1_chegada);
+                // Data
+                // data label
+                JLabel l_data = new JLabel("Data");
+                l_data.setBounds(705, 125, 150, 30);
+                p_criar_voo.add(l_data);
+                // data textfield
+                JTextField tf_data = new JTextField();
+                tf_data.setBounds(695, 150, 150, 30);
+                p_criar_voo.add(tf_data);
+                // companhia
+                // companhia label
+                JLabel l_companhia = new JLabel("Companhia");
+                l_companhia.setBounds(75, 225, 150, 20);
+                p_criar_voo.add(l_companhia);
+                // companhia combobox
+                JComboBox <String> cb_companhia = new JComboBox<String>();
+                cb_companhia.setBounds(65, 245, 150, 30);
+                cb_companhia.addItem("");
+                for(int i = 0; i < companhias.size(); i++){
+                    cb_companhia.addItem(companhias.get(i).getNome());
+                }
+                p_criar_voo.add(cb_companhia);
+                // Aviao
+                // aviao label
+                JLabel l_aviao = new JLabel("Avião");
+                l_aviao.setBounds(255, 225, 150, 20);
+                p_criar_voo.add(l_aviao);
+                // aviao combobox
+                JComboBox <String> cb_aviao = new JComboBox<String>();
+                cb_aviao.setBounds(245, 245, 150, 30);
+                cb_aviao.addItem("");
+                for(int i = 0; i < avioes.size(); i++){
+                    cb_aviao.addItem(avioes.get(i).getModelo());
+                }
+                p_criar_voo.add(cb_aviao);
+                // Piloto
+                // piloto label
+                JLabel l_piloto = new JLabel("Piloto");
+                l_piloto.setBounds(435, 225, 150, 20);
+                p_criar_voo.add(l_piloto);
+                // piloto combobox
+                JComboBox <String> cb_piloto = new JComboBox<String>();
+                cb_piloto.setBounds(425, 245, 150, 30);
+                cb_piloto.addItem("");
+                for(int i = 0; i < pilotos.size(); i++){
+                    cb_piloto.addItem(pilotos.get(i).getNome());
+                }
+                p_criar_voo.add(cb_piloto);
+                // Origem
+                // origem label
+                JLabel l_origem = new JLabel("Origem");
+                l_origem.setBounds(615, 225, 150, 20);
+                p_criar_voo.add(l_origem);
+                // origem combobox
+                JComboBox <String> cb_origem = new JComboBox<String>();
+                cb_origem.setBounds(605, 245, 150, 30);
+                cb_origem.addItem("");
+                for(int i = 0; i < aeroportos.size(); i++){
+                    cb_origem.addItem(aeroportos.get(i).getCidade() + "(" + aeroportos.get(i).getAbreviatura() + ")");
+                }
+                p_criar_voo.add(cb_origem);
+                // Destino
+                // destino label
+                JLabel l_destino = new JLabel("Destino");
+                l_destino.setBounds(795, 225, 150, 20);
+                p_criar_voo.add(l_destino);
+                // destino combobox
+                JComboBox <String> cb_destino = new JComboBox<String>();
+                cb_destino.setBounds(785, 245, 150, 30);
+                cb_destino.addItem("");
+                for(int i = 0; i < aeroportos.size(); i++){
+                    cb_destino.addItem(aeroportos.get(i).getCidade() + "(" + aeroportos.get(i).getAbreviatura() + ")");
+                }
+                p_criar_voo.add(cb_destino);
+                // criar button
+                JButton b_criar = new JButton("+   Criar");
+                b_criar.setBounds(525, 500, 150, 75);
+                b_criar.addActionListener(o ->{
+                    String codigo = tf_codigo.getText();
+                    String hora_partida = tf1_partida.getText();
+                    String hora_chegada = tf1_chegada.getText();
+                    String data = tf_data.getText();
+                    int index_companhia = cb_companhia.getSelectedIndex();
+                    Companhia comp = companhias.get(index_companhia - 1);
+                    int index_aviao = cb_aviao.getSelectedIndex();
+                    Aviao av = avioes.get(index_aviao - 1);
+                    int index_piloto = cb_piloto.getSelectedIndex();
+                    Piloto pil = pilotos.get(index_piloto - 1);
+                    int index_origem = cb_origem.getSelectedIndex();
+                    Aeroporto aer_origem = aeroportos.get(index_origem - 1);
+                    int index_destino = cb_destino.getSelectedIndex();
+                    Aeroporto aer_destino = aeroportos.get(index_destino - 1);
+                    try {
+                        Voo voo = new Voo(codigo, av, comp, pil, aer_origem, aer_destino, hora_partida, hora_chegada, data);
+                        voos.add(voo);
+                        writeXml();
+                        JOptionPane.showMessageDialog(null, "O voo foi criado com sucesso!");
+                    } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
+                        e1.printStackTrace();
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                    p_criar_voo.removeAll();
+                    frame.setContentPane(p_admingeneral);
+                    frame.revalidate();
+                });
+                p_criar_voo.add(b_criar);
+                // cancelar button
+                JButton b_cancelar = new JButton("x   Cancelar");
+                b_cancelar.setBounds(325, 500, 150, 75);
+                b_cancelar.addActionListener(o ->{
+                    p_criar_voo.removeAll();
+                    frame.setContentPane(p_admingeneral);
+                    frame.revalidate();
+                });
+                p_criar_voo.add(b_cancelar);
+                p_admintables.removeAll();
+                frame.setContentPane(p_criar_voo);
+                frame.revalidate();
+            });
+            p_admintables.add(b_criar_voo);
+            frame.setContentPane(p_admintables);
+            frame.revalidate();
+        });
+        p_admingeneral.add(b_vertodososvoos);
+        // terminar sessao button
+        JButton b1_terminar = new JButton("Terminar Sessão");
+        b1_terminar.setBounds(800, 25, 150, 75);
+        b1_terminar.addActionListener(e -> {
+            comp = true;
+            avi = false;
+            pil = false;
+            aero = false;
+            l_companhias.setVisible(true);
+            cb_companhias.setSelectedIndex(0);
+            cb_companhias.setVisible(true);
+            l_avioes.setVisible(false);
+            cb_avioes.setSelectedIndex(0);
+            cb_avioes.setVisible(false);
+            l_pilotos.setVisible(false);
+            cb_pilotos.setSelectedIndex(0);
+            cb_pilotos.setVisible(false);
+            l_aeroportos.setVisible(false);
+            cb_aeroportos.setSelectedIndex(0);
+            cb_aeroportos.setVisible(false);
+            frame.setContentPane(p_menu);
+            frame.revalidate();
+        });
+        p_admingeneral.add(b1_terminar);
+
 
 
         // Inicializacao dos frames
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    //ordena a lista dos proximos voos por data e caso sejam no mesmo dia ordena por hora
+    private static void ordenar_voos(){
+        Collections.sort(voos, Comparator.comparing(Voo::getPartida));
+        Collections.sort(voos, Comparator.comparing(Voo::getData));
+    }
+
+    //troca a ordem dos voos
+    private static void reverse_voos(){
+        Collections.reverse(voos);
     }
 
     //atualiza o documento xml da base de dados

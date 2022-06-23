@@ -90,7 +90,7 @@ public class Companhia {
     //ordena a lista dos proximos voos por data e caso sejam no mesmo dia ordena por hora
     private void ordenar_voos(){
         Collections.sort(voos, Comparator.comparing(Voo::getPartida));
-        Collections.sort(voos, Comparator.comparing(Voo::getDate));
+        Collections.sort(voos, Comparator.comparing(Voo::getData));
     }
 
     //troca a ordem dos voos
