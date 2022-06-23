@@ -546,6 +546,20 @@ public class Main {
 
 
 
+        // admin item
+        // pilotos combobox
+        JComboBox <String> cb_pilotos = new JComboBox<>();
+        cb_pilotos.setBounds(400, 425, 200, 30);
+        cb_pilotos.addItem("");
+        for(int i = 0; i < pilotos.size(); i++){
+            cb_pilotos.addItem(pilotos.get(i).getNome());
+        }
+        cb_pilotos.setVisible(false);
+        p_admingeneral.add(cb_pilotos);
+
+
+
+
         //SignUo Items
         // signUp label
         JLabel l1_signUp = new JLabel("SignUp");
@@ -638,6 +652,7 @@ public class Main {
                             String nome_completo = nome_proprio + " " + apelido;
                             Piloto p = new Piloto(nome_completo, 0);
                             pilotos.add(p);
+                            cb_pilotos.addItem(nome_completo);
                             try {
                                 writeXml();
                             } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
@@ -1033,15 +1048,6 @@ public class Main {
         l_pilotos.setVisible(false);
         pil = false;
         p_admingeneral.add(l_pilotos);
-        // pilotos combobox
-        JComboBox <String> cb_pilotos = new JComboBox<>();
-        cb_pilotos.setBounds(400, 425, 200, 30);
-        cb_pilotos.addItem("");
-        for(int i = 0; i < pilotos.size(); i++){
-            cb_pilotos.addItem(pilotos.get(i).getNome());
-        }
-        cb_pilotos.setVisible(false);
-        p_admingeneral.add(cb_pilotos);
         // Aeroportos
         // aeroportos label
         JLabel l_aeroportos = new JLabel("Aeroportos");
@@ -1294,9 +1300,10 @@ public class Main {
                                 voos.remove(j);
                             }
                         }
-                        companhias.remove(i);
                         try {
+                            companhias.remove(i);
                             writeXml();
+                            JOptionPane.showMessageDialog(null, "A companhia foi removida com sucesso!");
                         } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
                             e1.printStackTrace();
                         }
@@ -1304,7 +1311,6 @@ public class Main {
                         cb_companhias.removeItemAt(i + 1);
                         frame.setContentPane(p_admingeneral);
                         frame.revalidate();
-                        JOptionPane.showMessageDialog(null, "A companhia foi removida com sucesso!");
                     });
                     p_remover.add(b1_remover);
                     // criar button
@@ -1341,6 +1347,7 @@ public class Main {
                     b_cancelar.setBounds(325, 500, 150, 75);
                     b_cancelar.addActionListener(l ->{
                         p_remover.removeAll();
+                        p_criar.removeAll();
                         frame.setContentPane(p_admingeneral);
                         frame.revalidate();
                     });
@@ -1349,6 +1356,7 @@ public class Main {
                     b2_cancelar.setBounds(325, 500, 150, 75);
                     b2_cancelar.addActionListener(l ->{
                         p_criar.removeAll();
+                        p_remover.removeAll();
                         frame.setContentPane(p_admingeneral);
                         frame.revalidate();
                     });
@@ -1419,9 +1427,10 @@ public class Main {
                                 voos.remove(j);
                             }
                         }
-                        avioes.remove(i);
                         try {
+                            avioes.remove(i);
                             writeXml();
+                            JOptionPane.showMessageDialog(null, "O Avião foi removido com sucesso!");
                         } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
                             e1.printStackTrace();
                         }
@@ -1429,7 +1438,6 @@ public class Main {
                         cb_avioes.removeItemAt(i + 1);
                         frame.setContentPane(p_admingeneral);
                         frame.revalidate();
-                        JOptionPane.showMessageDialog(null, "O Avião foi removido com sucesso!");
                     });
                     p_remover.add(b1_remover);
                     // criar button
@@ -1691,9 +1699,10 @@ public class Main {
                                 voos.remove(j);
                             }
                         }
-                        aeroportos.remove(i);
                         try {
+                            aeroportos.remove(i);
                             writeXml();
+                            JOptionPane.showMessageDialog(null, "O Aeroporto foi removido com sucesso!");
                         } catch (FileNotFoundException | TransformerException | ParserConfigurationException e1) {
                             e1.printStackTrace();
                         }
@@ -1701,7 +1710,6 @@ public class Main {
                         cb_aeroportos.removeItemAt(i + 1);
                         frame.setContentPane(p_admingeneral);
                         frame.revalidate();
-                        JOptionPane.showMessageDialog(null, "O Aeroporto foi removido com sucesso!");
                     });
                     p_remover.add(b1_remover);
                     // criar button
@@ -1791,6 +1799,8 @@ public class Main {
             b2_voltar.setBounds(20, 20, 100, 50);
             b2_voltar.addActionListener(l ->{
                 p_admintables.removeAll();
+                p_criar.removeAll();
+                p_remover.removeAll();
                 comp = true;
                 avi = false;
                 pil = false;
